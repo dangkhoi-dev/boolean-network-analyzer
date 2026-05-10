@@ -1,0 +1,8 @@
+# Toy 3-node switch
+# Demonstrates a single fixed-point attractor regardless of initial state.
+# Useful for sanity checking parser, sync vs async behaviour, and STG drawing.
+
+targets, factors
+A, !B
+B, A & !C
+C, B

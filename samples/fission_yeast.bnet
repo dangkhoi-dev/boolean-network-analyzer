@@ -1,0 +1,17 @@
+# Boolean model of the fission yeast (S. pombe) cell cycle.
+# Reduced 9-node version inspired by Davidich & Bornholdt (2008).
+# Under synchronous update it has a single dominant fixed-point attractor
+# (the G1 state) reached from the vast majority of initial conditions.
+# Reference: Davidich MI, Bornholdt S, "Boolean network model predicts cell
+# cycle sequence of fission yeast", PLoS ONE 3(2): e1672, 2008.
+
+targets, factors
+SK, Start
+Cdc2_Cdc13, !Ste9 & !Slp1 & !Rum1
+Ste9, (!SK & !Cdc2_Cdc13 & !Cdc2_Cdc13_active) | (Ste9 & !SK & !Cdc2_Cdc13_active)
+Rum1, (!SK & !Cdc2_Cdc13 & !Cdc2_Cdc13_active) | (Rum1 & !SK & !Cdc2_Cdc13_active)
+Slp1, Cdc2_Cdc13_active
+Cdc2_Cdc13_active, !Ste9 & !Slp1 & !Rum1 & !Wee1_Mik1
+Wee1_Mik1, (!Cdc2_Cdc13 & !Cdc2_Cdc13_active) | (Wee1_Mik1 & !Cdc2_Cdc13_active)
+Cdc25, (Cdc2_Cdc13 & !Cdc25) | (Cdc2_Cdc13_active & Cdc25)
+Start, !Start

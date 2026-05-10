@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boolean Network Analyzer — HCMUT Capstone P6</title>
+  <meta name="description" content="A Python toolkit and Streamlit app for parsing, simulating and analyzing Boolean networks: import .bnet, draw the influence graph, build synchronous & asynchronous state-transition graphs, compute attractors." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-2: #0f172a;
+      --panel: #111827;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --border: rgba(148,163,184,.18);
+      --code-bg: #0a0f1c;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(56,189,248,.18), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(129,140,248,.18), transparent 60%),
+        var(--bg);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; }
+
+    /* ---- Layout ---- */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ---- Nav ---- */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,16,32,.75);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .wrap {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+    }
+    .logo { font-weight: 800; letter-spacing: -0.02em; font-size: 1.05rem; }
+    .logo span { color: var(--accent); }
+    .nav-links a {
+      color: var(--muted); margin-left: 1.4rem; font-size: .95rem;
+    }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* ---- Hero ---- */
+    header.hero { padding: 5rem 0 4rem; }
+    .hero-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center; }
+    @media (min-width: 900px) {
+      .hero-grid { grid-template-columns: 1.1fr .9fr; }
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .35rem .75rem; border-radius: 999px;
+      background: rgba(56,189,248,.12); color: var(--accent);
+      border: 1px solid rgba(56,189,248,.3);
+      font-size: .85rem; font-weight: 600;
+    }
+    .badge::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 8px var(--accent);
+    }
+    h1.title {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 1.2rem 0 1rem;
+    }
+    h1.title em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .lead { color: var(--muted); font-size: 1.1rem; max-width: 38em; }
+    .cta-row { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.6rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .8rem 1.2rem; border-radius: .6rem;
+      font-weight: 600; font-size: .95rem; border: 1px solid transparent;
+      transition: all .15s;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #0b1020;
+    }
+    .btn-primary:hover { filter: brightness(1.1); text-decoration: none; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.04); text-decoration: none; }
+
+    .hero-art {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,.6);
+    }
+    .hero-art img { width: 100%; display: block; }
+
+    /* ---- Sections ---- */
+    section { padding: 4rem 0; border-top: 1px solid var(--border); }
+    h2.section-title {
+      font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+      margin: 0 0 .4rem;
+    }
+    .section-sub { color: var(--muted); margin-bottom: 2.4rem; max-width: 36em; }
+
+    /* ---- Feature cards ---- */
+    .features {
+      display: grid; gap: 1.2rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) { .features { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) { .features { grid-template-columns: repeat(4, 1fr); } }
+    .feature {
+      background: rgba(15,23,42,.55);
+      border: 1px solid var(--border);
+      border-radius: .8rem;
+      padding: 1.4rem;
+      transition: transform .15s, border-color .15s;
+    }
+    .feature:hover { transform: translateY(-2px); border-color: rgba(56,189,248,.4); }
+    .feature .icon {
+      width: 2.2rem; height: 2.2rem; border-radius: .5rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(56,189,248,.12); color: var(--accent);
+      font-weight: 800; margin-bottom: .9rem;
+    }
+    .feature h3 { font-size: 1.05rem; margin: 0 0 .35rem; }
+    .feature p { color: var(--muted); font-size: .95rem; margin: 0; }
+
+    /* ---- Demo gallery ---- */
+    .demo {
+      display: grid; gap: 1.2rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px) { .demo { grid-template-columns: 1fr 1fr; } }
+    .demo figure {
+      margin: 0; border: 1px solid var(--border); border-radius: .8rem;
+      overflow: hidden; background: #fff;
+    }
+    .demo figcaption {
+      background: rgba(15,23,42,.7); color: var(--muted);
+      padding: .7rem 1rem; font-size: .9rem;
+    }
+    .demo img { width: 100%; display: block; }
+
+    /* ---- Code block ---- */
+    pre.code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: .6rem;
+      padding: 1.1rem 1.3rem;
+      overflow-x: auto;
+      font-size: .92rem;
+      line-height: 1.55;
+    }
+    pre.code .c { color: #64748b; }
+    pre.code .k { color: #c084fc; }
+    pre.code .s { color: #fcd34d; }
+    pre.code .n { color: #38bdf8; }
+
+    /* ---- Tables ---- */
+    table.samples { width: 100%; border-collapse: collapse; font-size: .95rem; }
+    table.samples th, table.samples td {
+      border-bottom: 1px solid var(--border); padding: .6rem .5rem; text-align: left;
+    }
+    table.samples th { color: var(--muted); font-weight: 600; }
+
+    /* ---- Footer ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0; color: var(--muted); font-size: .9rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">BN<span>Analyzer</span></div>
+    <div class="nav-links">
+      <a href="app.html"><strong style="color:#38bdf8">▶ Live demo</strong></a>
+      <a href="#features">Features</a>
+      <a href="#demo">Screens</a>
+      <a href="#install">Install</a>
+      <a href="#samples">Samples</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge">HCMUT Capstone Project P6</span>
+      <h1 class="title">Analyze <em>Boolean networks</em> from a single <code>.bnet</code> file.</h1>
+      <p class="lead">
+        A Python toolkit and Streamlit web app that imports a Boolean network,
+        visualizes its influence graph, builds the state-transition graph
+        under both synchronous and asynchronous update schemes, and computes
+        every attractor &mdash; fixed points, cyclic, and complex.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="app.html">▶ Try the live demo</a>
+        <a class="btn btn-ghost" href="#install">Run locally</a>
+        <a class="btn btn-ghost" href="#demo">See screenshots</a>
+        <a class="btn btn-ghost" href="https://github.com/" target="_blank" rel="noopener">View source</a>
+      </div>
+      <p style="color:var(--muted);font-size:.88rem;margin-top:.7rem">
+        The live demo runs <strong>entirely in your browser</strong> — no install, no backend.
+      </p>
+    </div>
+    <div class="hero-art">
+      <img src="img/stg_sync_repressilator.png" alt="State transition graph of a 3-node repressilator under synchronous update" />
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <h2 class="section-title">Four core capabilities</h2>
+    <p class="section-sub">
+      Every requirement of the assignment is implemented and visible inside
+      the Streamlit UI.
+    </p>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">1</div>
+        <h3>Import <code>.bnet</code></h3>
+        <p>Robust parser for the standard PyBoolNet/BoolNet format, with
+          inline comments, word/symbolic operators, and friendly errors.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">2</div>
+        <h3>Influence graph</h3>
+        <p>Sign-annotated regulator graph &mdash; activation
+          (<span style="color:#22c55e">+</span>), inhibition
+          (<span style="color:#ef4444">-</span>), or non-monotonic
+          (<span style="color:#94a3b8">?</span>).</p>
+      </div>
+      <div class="feature">
+        <div class="icon">3</div>
+        <h3>STG: sync &amp; async</h3>
+        <p>Build the full state-transition graph under either update
+          scheme, color-coded by which states are part of an attractor.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">4</div>
+        <h3>Attractor detection</h3>
+        <p>Find every terminal SCC: fixed points, cyclic, and complex
+          attractors &mdash; with their basins of attraction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <h2 class="section-title">See it in action</h2>
+    <p class="section-sub">
+      Generated directly by the analyzer from the bundled sample files.
+    </p>
+    <div class="demo">
+      <figure>
+        <img src="img/influence_repressilator.png" alt="Influence graph of the 3-gene repressilator" />
+        <figcaption>Influence graph of the 3-gene repressilator (<code>repressilator.bnet</code>).</figcaption>
+      </figure>
+      <figure>
+        <img src="img/stg_sync_repressilator.png" alt="Synchronous STG of the repressilator with attractors highlighted" />
+        <figcaption>Synchronous STG &mdash; one length-6 cycle, one length-2 cycle.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/stg_async_bistable.png" alt="Asynchronous STG of the bistable toggle switch" />
+        <figcaption>Asynchronous STG of the bistable toggle &mdash; two fixed points (yellow).</figcaption>
+      </figure>
+      <figure>
+        <img src="img/influence_toy.png" alt="Influence graph of the toy 3-node switch" />
+        <figcaption>Influence graph of the toy 3-node switch (<code>toy_switch.bnet</code>).</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2 class="section-title">Run it locally</h2>
+    <p class="section-sub">
+      Python 3.9+ and a couple of standard libraries are all that you need.
+    </p>
+<pre class="code"><span class="c"># 1. Clone the repository</span>
+git clone https://github.com/&lt;your-username&gt;/boolean-network-analyzer.git
+<span class="k">cd</span> boolean-network-analyzer
+
+<span class="c"># 2. Create a virtual environment (optional but recommended)</span>
+python -m venv .venv
+<span class="k">source</span> .venv/bin/activate    <span class="c"># on Windows: .venv\Scripts\activate</span>
+
+<span class="c"># 3. Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="c"># 4. Launch the Streamlit app</span>
+streamlit run app.py
+
+<span class="c"># Or run the test suite</span>
+PYTHONPATH=src pytest -v</pre>
+    <p style="color:var(--muted);font-size:.95rem;margin-top:1rem">
+      The app opens at <code>http://localhost:8501</code>. Pick a sample
+      from the sidebar or upload your own <code>.bnet</code> file.
+    </p>
+  </div>
+</section>
+
+<section id="samples">
+  <div class="wrap">
+    <h2 class="section-title">Bundled sample networks</h2>
+    <p class="section-sub">
+      Five reference Boolean networks ship with the project for instant
+      experimentation.
+    </p>
+    <table class="samples">
+      <thead>
+        <tr><th>File</th><th>Nodes</th><th>About</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>toy_switch.bnet</code></td><td>3</td><td>Pedagogical example with a single fixed-point attractor.</td></tr>
+        <tr><td><code>bistable_toggle.bnet</code></td><td>2</td><td>Mutual repression &mdash; two stable steady states (Gardner et al. 2000).</td></tr>
+        <tr><td><code>repressilator.bnet</code></td><td>3</td><td>Cyclic mutual repression &mdash; synchronous cycle of length 6.</td></tr>
+        <tr><td><code>fission_yeast.bnet</code></td><td>9</td><td>Reduced <em>S. pombe</em> cell-cycle model (Davidich &amp; Bornholdt 2008).</td></tr>
+        <tr><td><code>mammalian_cell_cycle.bnet</code></td><td>10</td><td>Reduced mammalian cell-cycle model (Faure et al. 2006).</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="references">
+  <div class="wrap">
+    <h2 class="section-title">References</h2>
+    <ul style="color:var(--muted);font-size:.95rem;line-height:1.8;padding-left:1.2rem">
+      <li>Schwab, J. D. <em>et al.</em> "Concepts in Boolean network modeling: What do they all mean?" <em>Computational and Structural Biotechnology Journal</em>, 18 (2020): 571&ndash;582.</li>
+      <li>Naldi, A. <em>et al.</em> "Logical modelling of regulatory networks with GINsim 2.3." <em>BioSystems</em>, 97(2) (2009): 134&ndash;139.</li>
+      <li>Klarner, H. <em>et al.</em> "PyBoolNet: A python package for the generation, analysis and visualization of Boolean networks." <em>Bioinformatics</em>, 33(5) (2017): 770&ndash;772.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Built by <strong>Tran Phan Dang Khoi</strong> (Student ID 2352626) &mdash;
+    HCMUT, Faculty of Computer Science &amp; Engineering, 2026.
+    Capstone project P6: Boolean Network Analyzer.
+  </div>
+</footer>
+
+</body>
+</html>

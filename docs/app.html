@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boolean Network Analyzer — Live Demo</title>
+  <meta name="description" content="In-browser Boolean network analyzer: parse .bnet, draw influence graph, build synchronous & asynchronous STGs, and compute every attractor — no install required." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+  <style>
+    :root{
+      --bg:#0b1020; --bg-2:#0f172a; --panel:#111827;
+      --text:#e2e8f0; --muted:#94a3b8;
+      --accent:#38bdf8; --accent-2:#818cf8;
+      --good:#22c55e; --warn:#f59e0b; --bad:#ef4444; --att:#facc15;
+      --border:rgba(148,163,184,.18); --code-bg:#0a0f1c;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(56,189,248,.18), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(129,140,248,.18), transparent 60%),
+        var(--bg);
+      line-height:1.55;
+    }
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    code,pre{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Consolas,monospace}
+    button{font-family:inherit}
+    nav{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(10px);background:rgba(11,16,32,.78);
+      border-bottom:1px solid var(--border);
+    }
+    nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.5rem}
+    .logo{font-weight:800;letter-spacing:-0.02em;font-size:1.05rem}
+    .logo span{color:var(--accent)}
+    .nav-links a{color:var(--muted);margin-left:1.4rem;font-size:.95rem}
+    .nav-links a:hover{color:var(--text);text-decoration:none}
+    .wrap{max-width:1280px;margin:0 auto;padding:0 1.25rem}
+
+    main{display:grid;gap:1.25rem;padding:1.5rem;grid-template-columns:1fr;}
+    @media (min-width:1100px){
+      main{grid-template-columns:340px 1fr;}
+    }
+
+    /* sidebar */
+    aside{
+      background:rgba(15,23,42,.55);
+      border:1px solid var(--border);
+      border-radius:.8rem; padding:1rem; min-width:0;
+      position:sticky; top:64px; align-self:start;
+      max-height:calc(100vh - 80px); overflow:auto;
+    }
+    aside h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1rem 0 .5rem}
+    aside h2:first-child{margin-top:.25rem}
+    .field{margin-bottom:.7rem}
+    .field label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
+    select, input[type="file"], textarea, input[type="text"]{
+      width:100%; background:var(--code-bg); color:var(--text);
+      border:1px solid var(--border); border-radius:.4rem;
+      padding:.55rem .6rem; font-size:.9rem;
+    }
+    textarea{font-family:'JetBrains Mono',monospace;font-size:.82rem;min-height:160px;resize:vertical}
+    .btn-row{display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.4rem}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+      padding:.55rem .9rem;border-radius:.45rem;
+      font-weight:600;font-size:.88rem;border:1px solid transparent;
+      transition:all .15s; cursor:pointer;
+    }
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0b1020}
+    .btn-primary:hover{filter:brightness(1.1)}
+    .btn-ghost{background:transparent;color:var(--text);border-color:var(--border)}
+    .btn-ghost:hover{background:rgba(255,255,255,.05)}
+    .seg{display:inline-flex;border:1px solid var(--border);border-radius:.45rem;overflow:hidden}
+    .seg button{
+      padding:.45rem .9rem; border:0; background:transparent;
+      color:var(--muted); cursor:pointer; font-weight:600; font-size:.85rem;
+    }
+    .seg button.on{background:rgba(56,189,248,.18);color:var(--accent)}
+
+    /* main panel */
+    section.panel{
+      background:rgba(15,23,42,.55);
+      border:1px solid var(--border); border-radius:.8rem; padding:1rem;
+    }
+    .summary{
+      display:grid; gap:.5rem; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+      margin-bottom:1rem;
+    }
+    .stat{
+      background:rgba(11,16,32,.5); border:1px solid var(--border); border-radius:.55rem;
+      padding:.6rem .75rem;
+    }
+    .stat .lbl{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+    .stat .val{font-weight:700;font-size:1.2rem}
+
+    .tabs{display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.8rem; border-bottom:1px solid var(--border); padding-bottom:.2rem}
+    .tab-btn{
+      padding:.5rem .85rem; border:0; background:transparent; color:var(--muted);
+      font-weight:600; font-size:.9rem; cursor:pointer; border-radius:.4rem .4rem 0 0;
+      border-bottom:2px solid transparent;
+    }
+    .tab-btn.active{color:var(--accent); border-bottom-color:var(--accent); background:rgba(56,189,248,.06)}
+    .tab-pane{display:none}
+    .tab-pane.active{display:block}
+
+    .graph-host{
+      width:100%; height:560px;
+      background:#fff; border:1px solid var(--border); border-radius:.5rem;
+    }
+    @media (max-width:600px){ .graph-host{height:420px} }
+
+    table.data{
+      width:100%; border-collapse:collapse; font-size:.92rem;
+    }
+    table.data th, table.data td{
+      padding:.5rem .6rem; border-bottom:1px solid var(--border); text-align:left; vertical-align:top;
+    }
+    table.data th{color:var(--muted); font-weight:600; font-size:.8rem; text-transform:uppercase; letter-spacing:.06em}
+    table.data tr.attr-row td{background:rgba(250,204,21,.07)}
+    .pill{
+      display:inline-block; padding:.15rem .5rem; border-radius:999px;
+      font-size:.72rem; font-weight:700; letter-spacing:.04em;
+      border:1px solid var(--border);
+    }
+    .pill.fp{background:rgba(34,197,94,.12); color:#86efac; border-color:rgba(34,197,94,.3)}
+    .pill.cy{background:rgba(56,189,248,.12); color:#7dd3fc; border-color:rgba(56,189,248,.3)}
+    .pill.cx{background:rgba(244,114,182,.12); color:#f0abfc; border-color:rgba(244,114,182,.3)}
+    .pill.plus{background:rgba(34,197,94,.12); color:#86efac; border-color:rgba(34,197,94,.3)}
+    .pill.minus{background:rgba(239,68,68,.12); color:#fca5a5; border-color:rgba(239,68,68,.3)}
+    .pill.qmark{background:rgba(148,163,184,.12); color:#cbd5e1; border-color:rgba(148,163,184,.3)}
+    .mono{font-family:'JetBrains Mono',monospace;font-size:.85rem}
+
+    .alert{
+      background:rgba(239,68,68,.08); color:#fecaca;
+      border:1px solid rgba(239,68,68,.3); border-radius:.5rem; padding:.7rem .9rem;
+      margin-bottom:.8rem; font-size:.9rem;
+    }
+    .info{
+      background:rgba(56,189,248,.08); color:#bae6fd;
+      border:1px solid rgba(56,189,248,.3); border-radius:.5rem; padding:.7rem .9rem;
+      margin-bottom:.8rem; font-size:.88rem;
+    }
+    details{ background:rgba(11,16,32,.4); border:1px solid var(--border); border-radius:.4rem; padding:.5rem .75rem; margin-bottom:.5rem; }
+    details summary{ cursor:pointer; font-weight:600; font-size:.92rem; }
+    details[open] summary{ margin-bottom:.5rem; }
+    .legend{ display:flex; gap:.85rem; flex-wrap:wrap; margin:.4rem 0 .8rem; font-size:.82rem; color:var(--muted)}
+    .legend .swatch{ display:inline-block; width:.85rem; height:.85rem; border-radius:.2rem; margin-right:.3rem; vertical-align:middle; border:1px solid rgba(0,0,0,.2)}
+    footer{padding:1.5rem; text-align:center; color:var(--muted); font-size:.82rem; border-top:1px solid var(--border); margin-top:1rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">BN<span>Analyzer</span> · Live Demo</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <aside>
+    <h2>Input</h2>
+    <div class="field">
+      <label for="sampleSel">Sample network</label>
+      <select id="sampleSel">
+        <option value="toy">toy_switch.bnet (3 nodes)</option>
+        <option value="bistable" selected>bistable_toggle.bnet (2 nodes)</option>
+        <option value="repressilator">repressilator.bnet (3 nodes)</option>
+        <option value="fission">fission_yeast.bnet (9 nodes)</option>
+        <option value="mammalian">mammalian_cell_cycle.bnet (10 nodes)</option>
+        <option value="">— custom —</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="fileInp">Or upload a .bnet file</label>
+      <input type="file" id="fileInp" accept=".bnet,.txt" />
+    </div>
+    <div class="field">
+      <label for="src">.bnet source</label>
+      <textarea id="src" spellcheck="false"></textarea>
+    </div>
+
+    <h2>Update scheme</h2>
+    <div class="seg" role="tablist">
+      <button id="schSync" class="on" data-scheme="synchronous">Sync</button>
+      <button id="schAsync" data-scheme="asynchronous">Async</button>
+    </div>
+
+    <h2>Run</h2>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="runBtn">▶ Analyze</button>
+      <button class="btn btn-ghost" id="dlJson">⬇ JSON</button>
+      <button class="btn btn-ghost" id="dlCsv">⬇ CSV</button>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:.6rem;line-height:1.5">
+      Networks up to ~14 nodes (16 384 states) analyse in &lt;1s in your browser.
+      Beyond that the brute-force STG becomes the bottleneck.
+    </p>
+
+    <h2>Tips</h2>
+    <ul style="font-size:.82rem;color:var(--muted);padding-left:1rem;line-height:1.6">
+      <li>Operators: <code>!</code>, <code>&amp;</code>, <code>|</code>, parentheses.</li>
+      <li>Constants: <code>0</code>, <code>1</code>, <code>True</code>, <code>False</code>.</li>
+      <li>Each line: <code>target, expression</code>.</li>
+      <li>Inline <code># comments</code> are stripped.</li>
+    </ul>
+  </aside>
+
+  <section class="panel">
+    <div id="errBox"></div>
+    <div class="summary" id="summary"></div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="ig">Influence graph</button>
+      <button class="tab-btn" data-tab="stg">State transition graph</button>
+      <button class="tab-btn" data-tab="att">Attractors</button>
+      <button class="tab-btn" data-tab="sim">Simulate</button>
+      <button class="tab-btn" data-tab="rules">Rules</button>
+    </div>
+
+    <div id="tab-ig" class="tab-pane active">
+      <div class="legend">
+        <span><span class="swatch" style="background:#22c55e"></span>activator (+)</span>
+        <span><span class="swatch" style="background:#ef4444"></span>inhibitor (−)</span>
+        <span><span class="swatch" style="background:#94a3b8"></span>non-monotonic (?)</span>
+      </div>
+      <div id="igGraph" class="graph-host"></div>
+    </div>
+
+    <div id="tab-stg" class="tab-pane">
+      <div class="legend">
+        <span><span class="swatch" style="background:#facc15"></span>state in an attractor</span>
+        <span><span class="swatch" style="background:#bae6fd"></span>transient state</span>
+      </div>
+      <div id="stgGraph" class="graph-host"></div>
+      <p id="stgNote" style="color:var(--muted);font-size:.85rem;margin-top:.4rem"></p>
+    </div>
+
+    <div id="tab-att" class="tab-pane">
+      <div id="attBody"></div>
+    </div>
+
+    <div id="tab-sim" class="tab-pane">
+      <div class="info">
+        Pick an initial state, then step the network forward. Under <em>asynchronous</em>
+        update, only one of the dis-equilibrated nodes is updated per step (chosen
+        round-robin from the available ones).
+      </div>
+      <div class="field" style="display:flex;gap:.6rem;align-items:end;flex-wrap:wrap">
+        <div style="flex:1;min-width:160px">
+          <label for="initState">Initial state (binary)</label>
+          <input type="text" id="initState" />
+        </div>
+        <div>
+          <button class="btn btn-ghost" id="simReset">Reset</button>
+          <button class="btn btn-primary" id="simStep">Step ▶</button>
+          <button class="btn btn-ghost" id="simRun">Run 20×</button>
+        </div>
+      </div>
+      <div id="simBody"></div>
+    </div>
+
+    <div id="tab-rules" class="tab-pane">
+      <div id="rulesBody"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Boolean Network Analyzer — Capstone P6, HCMUT FCSE.
+  All computation runs locally in your browser (no data leaves the page).
+</footer>
+
+<script>
+/* ============================================================== */
+/* Sample networks (kept in sync with /samples/*.bnet)            */
+/* ============================================================== */
+const SAMPLES = {
+  toy: `# Toy 3-node switch
+# Demonstrates a single fixed-point attractor regardless of initial state.
+targets, factors
+A, !B
+B, A & !C
+C, B
+`,
+  bistable: `# Classic bistable toggle switch (mutual repression)
+# Reference: Gardner et al., Nature 2000.
+targets, factors
+A, !B
+B, !A
+`,
+  repressilator: `# Boolean repressilator: 3-gene cyclic mutual repression
+# Reference: Elowitz & Leibler, Nature 2000 (continuous-time version).
+targets, factors
+A, !C
+B, !A
+C, !B
+`,
+  fission: `# Fission yeast (S. pombe) cell cycle, 9-node Boolean model
+# Reference: Davidich & Bornholdt, PLoS ONE 3(2): e1672, 2008.
+targets, factors
+SK, Start
+Cdc2_Cdc13, !Ste9 & !Slp1 & !Rum1
+Ste9, (!SK & !Cdc2_Cdc13 & !Cdc2_Cdc13_active) | (Ste9 & !SK & !Cdc2_Cdc13_active)
+Rum1, (!SK & !Cdc2_Cdc13 & !Cdc2_Cdc13_active) | (Rum1 & !SK & !Cdc2_Cdc13_active)
+Slp1, Cdc2_Cdc13_active
+Cdc2_Cdc13_active, !Ste9 & !Slp1 & !Rum1 & !Wee1_Mik1
+Wee1_Mik1, (!Cdc2_Cdc13 & !Cdc2_Cdc13_active) | (Wee1_Mik1 & !Cdc2_Cdc13_active)
+Cdc25, (Cdc2_Cdc13 & !Cdc25) | (Cdc2_Cdc13_active & Cdc25)
+Start, !Start
+`,
+  mammalian: `# Mammalian cell cycle, 10-node Boolean model
+# Reference: Faure et al., Bioinformatics, 2006.
+targets, factors
+CycD, CycD
+Rb, (!CycD & !CycE & !CycA & !CycB) | (p27 & !CycD & !CycB)
+E2F, (!Rb & !CycA & !CycB) | (p27 & !Rb & !CycB)
+CycE, E2F & !Rb
+CycA, (E2F & !Rb & !Cdc20 & !(Cdh1 & UbcH10)) | (CycA & !Rb & !Cdc20 & !(Cdh1 & UbcH10))
+p27, (!CycD & !CycE & !CycA & !CycB) | (p27 & !(CycE & CycA) & !CycB & !CycD)
+Cdc20, CycB
+Cdh1, (!CycA & !CycB) | Cdc20 | (p27 & !CycB)
+UbcH10, !Cdh1 | (Cdh1 & UbcH10 & (Cdc20 | CycA | CycB))
+CycB, !Cdc20 & !Cdh1
+`
+};
+
+/* ============================================================== */
+/* Parser .bnet                                                   */
+/* ============================================================== */
+class BNetParseError extends Error{}
+
+const IDENT_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const RESERVED = new Set(["and","or","not","True","False"]);
+
+function tokenize(expr){
+  const out = [];
+  let i = 0;
+  while(i < expr.length){
+    const c = expr[i];
+    if(/\s/.test(c)){ i++; continue; }
+    if(c === '(' || c === ')'){ out.push(c); i++; continue; }
+    if(c === '&' || c === '|'){
+      if(expr[i+1] === c){ out.push(c+c); i+=2; }
+      else { out.push(c); i++; }
+      continue;
+    }
+    if(c === '!'){ out.push('!'); i++; continue; }
+    const m = expr.slice(i).match(/^[A-Za-z_][A-Za-z0-9_]*/);
+    if(m){ out.push(m[0]); i += m[0].length; continue; }
+    if(/[01]/.test(c)){ out.push(c); i++; continue; }
+    throw new BNetParseError(`Unexpected character ${JSON.stringify(c)} in expression: ${JSON.stringify(expr)}`);
+  }
+  return out;
+}
+
+function toJsExpr(expr){
+  const toks = tokenize(expr);
+  const out = [];
+  const inputs = new Set();
+  for(const tok of toks){
+    if(tok==='&'||tok==='&&') out.push(' && ');
+    else if(tok==='|'||tok==='||') out.push(' || ');
+    else if(tok==='!') out.push(' !');
+    else if(tok==='(' || tok===')') out.push(tok);
+    else if(tok==='0') out.push('false');
+    else if(tok==='1') out.push('true');
+    else if(IDENT_RE.test(tok)){
+      const low = tok.toLowerCase();
+      if(low==='true'||low==='false') out.push(low);
+      else if(low==='and') out.push(' && ');
+      else if(low==='or') out.push(' || ');
+      else if(low==='not') out.push(' !');
+      else {
+        if(RESERVED.has(tok)) throw new BNetParseError(`Reserved word ${tok} cannot be used as variable name`);
+        inputs.add(tok);
+        out.push(`s["${tok}"]`);
+      }
+    } else {
+      throw new BNetParseError(`Unrecognized token ${tok}`);
+    }
+  }
+  const js = out.join('').trim();
+  if(!js) throw new BNetParseError('Empty expression');
+  return { js, inputs:[...inputs].sort() };
+}
+
+function parseBnet(source){
+  const rules = {};
+  const order = [];
+  const lines = source.split(/\r?\n/);
+  for(let lno=0; lno<lines.length; lno++){
+    const raw = lines[lno];
+    const line = raw.split('#')[0].trim();
+    if(!line) continue;
+    if(/^targets\s*,\s*factors$/i.test(line)) continue;
+    const idx = line.indexOf(',');
+    if(idx < 0) throw new BNetParseError(`Line ${lno+1}: expected 'target, expression' but got ${JSON.stringify(raw)}`);
+    const target = line.slice(0,idx).trim();
+    const expr = line.slice(idx+1).trim();
+    if(!target) throw new BNetParseError(`Line ${lno+1}: missing target name`);
+    if(!IDENT_RE.test(target)) throw new BNetParseError(`Line ${lno+1}: invalid target name ${target}`);
+    if(RESERVED.has(target)) throw new BNetParseError(`Line ${lno+1}: target name ${target} is reserved`);
+    if(!expr) throw new BNetParseError(`Line ${lno+1}: missing expression for ${target}`);
+    if(rules[target]) throw new BNetParseError(`Line ${lno+1}: duplicate update rule for ${target}`);
+    let js, inputs;
+    try { ({js, inputs} = toJsExpr(expr)); }
+    catch(e){ throw new BNetParseError(`Line ${lno+1}: ${e.message}`); }
+    let fn;
+    try { fn = new Function('s', `"use strict"; return (${js});`); }
+    catch(e){ throw new BNetParseError(`Line ${lno+1}: invalid expression for ${target}: ${e.message}`); }
+    rules[target] = { target, expression: expr, jsExpression: js, inputs, eval: fn };
+    order.push(target);
+  }
+  if(order.length===0) throw new BNetParseError('No update rules found in source');
+  for(const t of order){
+    for(const inp of rules[t].inputs){
+      if(!rules[inp]) throw new BNetParseError(`Variable ${inp} appears in rule for ${t} but has no update rule of its own`);
+    }
+  }
+  return { rules, order };
+}
+
+/* ============================================================== */
+/* Boolean network — evaluation, influence graph                  */
+/* ============================================================== */
+class BooleanNetwork{
+  constructor(parsed){
+    this.rules = parsed.rules;
+    this.nodes = parsed.order;        // canonical order
+    this.n = this.nodes.length;
+    this.idx = Object.fromEntries(this.nodes.map((n,i)=>[n,i]));
+  }
+  // state encoded as Uint8Array of 0/1
+  evalNode(name, state){
+    const dict = this._asDict(state);
+    return !!this.rules[name].eval(dict);
+  }
+  evalAll(state){
+    const dict = this._asDict(state);
+    const out = new Uint8Array(this.n);
+    for(let i=0;i<this.n;i++){
+      out[i] = this.rules[this.nodes[i]].eval(dict) ? 1 : 0;
+    }
+    return out;
+  }
+  _asDict(state){
+    const d = {};
+    for(let i=0;i<this.n;i++) d[this.nodes[i]] = !!state[i];
+    return d;
+  }
+  stateToStr(state){ let s=''; for(let i=0;i<this.n;i++) s += state[i]?'1':'0'; return s; }
+  strToState(str){
+    if(str.length !== this.n) throw new Error(`State string length ${str.length} != ${this.n}`);
+    const a = new Uint8Array(this.n);
+    for(let i=0;i<this.n;i++) a[i] = str[i]==='1'?1:0;
+    return a;
+  }
+  *allStates(){
+    for(let k=0; k<(1<<this.n); k++){
+      const a = new Uint8Array(this.n);
+      for(let i=0;i<this.n;i++) a[i] = (k>>i)&1;
+      yield a;
+    }
+  }
+  // Influence graph: src -> tgt with sign +/-/?
+  influenceGraph(){
+    const edges = [];
+    for(const t of this.nodes){
+      const rule = this.rules[t];
+      for(const src of rule.inputs){
+        const sign = this._inferSign(t, src);
+        edges.push({source:src, target:t, sign});
+      }
+    }
+    return {nodes:[...this.nodes], edges};
+  }
+  _inferSign(target, source){
+    const rule = this.rules[target];
+    const others = rule.inputs.filter(v=>v!==source);
+    let inc=false, dec=false;
+    const k = others.length;
+    for(let mask=0; mask<(1<<k); mask++){
+      const ctx = {};
+      for(let j=0;j<k;j++) ctx[others[j]] = !!((mask>>j)&1);
+      ctx[source] = false; const off = !!rule.eval(ctx);
+      ctx[source] = true;  const on  = !!rule.eval(ctx);
+      if(off === on) continue;
+      if(on && !off) inc = true; else dec = true;
+      if(inc && dec) return '?';
+    }
+    if(inc && !dec) return '+';
+    if(dec && !inc) return '-';
+    return '?'; // source has no effect at all
+  }
+}
+
+/* ============================================================== */
+/* STG construction (sync/async). State-id = integer 0..2^n-1.    */
+/* ============================================================== */
+function stateToId(state, n){
+  let id = 0;
+  for(let i=0;i<n;i++) if(state[i]) id |= (1<<i);
+  return id;
+}
+function idToState(id, n){
+  const a = new Uint8Array(n);
+  for(let i=0;i<n;i++) a[i] = (id>>i)&1;
+  return a;
+}
+
+function buildSTG(net, scheme){
+  const n = net.n;
+  const N = 1 << n;
+  if(N > 1 << 16) throw new Error(`Network has ${n} nodes (2^n = ${N} states); browser demo limited to ≤16 nodes.`);
+  // out[i] = array of successor ids (1 element under sync)
+  const out = new Array(N);
+  for(let id=0; id<N; id++){
+    const s = idToState(id, n);
+    const next = net.evalAll(s);
+    if(scheme === 'synchronous'){
+      out[id] = [stateToId(next, n)];
+    } else {
+      const succ = [];
+      let any = false;
+      for(let i=0;i<n;i++){
+        if(s[i] !== next[i]){
+          const flipped = new Uint8Array(s);
+          flipped[i] = next[i];
+          succ.push(stateToId(flipped, n));
+          any = true;
+        }
+      }
+      if(!any) succ.push(id); // self-loop at fixed point
+      out[id] = succ;
+    }
+  }
+  return { N, out };
+}
+
+/* ============================================================== */
+/* Tarjan's SCC + terminal SCC extraction (attractors)            */
+/* ============================================================== */
+function tarjanSCC(N, out){
+  const indices = new Int32Array(N).fill(-1);
+  const low = new Int32Array(N);
+  const onStack = new Uint8Array(N);
+  const stack = [];
+  const sccs = [];
+  let index = 0;
+  const callStack = [];
+  // iterative Tarjan to avoid recursion-stack overflow on big graphs
+  for(let v0 = 0; v0 < N; v0++){
+    if(indices[v0] !== -1) continue;
+    callStack.push({v:v0, pi:0});
+    indices[v0] = index; low[v0] = index; index++;
+    stack.push(v0); onStack[v0] = 1;
+    while(callStack.length){
+      const frame = callStack[callStack.length - 1];
+      const v = frame.v;
+      const succs = out[v];
+      if(frame.pi < succs.length){
+        const w = succs[frame.pi++];
+        if(indices[w] === -1){
+          indices[w] = index; low[w] = index; index++;
+          stack.push(w); onStack[w] = 1;
+          callStack.push({v:w, pi:0});
+        } else if(onStack[w]){
+          if(indices[w] < low[v]) low[v] = indices[w];
+        }
+      } else {
+        callStack.pop();
+        if(callStack.length){
+          const par = callStack[callStack.length-1].v;
+          if(low[v] < low[par]) low[par] = low[v];
+        }
+        if(low[v] === indices[v]){
+          const comp = [];
+          let w;
+          do { w = stack.pop(); onStack[w] = 0; comp.push(w); } while(w !== v);
+          sccs.push(comp);
+        }
+      }
+    }
+  }
+  return sccs;
+}
+
+function findAttractors(N, out, scheme){
+  const sccs = tarjanSCC(N, out);
+  // Map state -> scc index
+  const compOf = new Int32Array(N);
+  for(let i=0;i<sccs.length;i++) for(const v of sccs[i]) compOf[v]=i;
+  // SCC is terminal if no outgoing edge to a different SCC
+  const terminal = [];
+  for(let i=0;i<sccs.length;i++){
+    const comp = sccs[i];
+    const memberSet = new Set(comp);
+    let isTerminal = true;
+    for(const v of comp){
+      for(const w of out[v]){
+        if(!memberSet.has(w)){ isTerminal = false; break; }
+      }
+      if(!isTerminal) break;
+    }
+    if(isTerminal){
+      let kind;
+      if(comp.length === 1){
+        kind = 'fixed_point';
+      } else if(scheme === 'synchronous'){
+        kind = 'cyclic';
+      } else {
+        // each node has out-degree 1 inside SCC -> simple cycle
+        let allOne = true;
+        for(const v of comp){
+          let inside = 0;
+          for(const w of out[v]) if(memberSet.has(w)) inside++;
+          if(inside !== 1){ allOne = false; break; }
+        }
+        kind = allOne ? 'cyclic' : 'complex';
+      }
+      comp.sort((a,b)=>a-b);
+      terminal.push({states: comp, kind});
+    }
+  }
+  terminal.sort((a,b) => a.states.length - b.states.length || a.states[0]-b.states[0]);
+  return terminal;
+}
+
+// Reverse-reachability — weak basin (states with a path to the attractor)
+function weakBasin(N, out, attractorStates){
+  const reverse = new Array(N);
+  for(let i=0;i<N;i++) reverse[i] = [];
+  for(let v=0;v<N;v++) for(const w of out[v]) reverse[w].push(v);
+  const seen = new Uint8Array(N);
+  const stack = [...attractorStates];
+  for(const s of attractorStates) seen[s] = 1;
+  while(stack.length){
+    const v = stack.pop();
+    for(const u of reverse[v]) if(!seen[u]){ seen[u] = 1; stack.push(u); }
+  }
+  const basin = [];
+  for(let i=0;i<N;i++) if(seen[i]) basin.push(i);
+  return basin;
+}
+
+/* ============================================================== */
+/* Visualization (vis-network)                                    */
+/* ============================================================== */
+let igNetwork = null, stgNetwork = null;
+
+function drawInfluenceGraph(net){
+  const ig = net.influenceGraph();
+  const nodes = ig.nodes.map(n => ({
+    id:n, label:n, shape:'circle',
+    color:{background:'#1e293b', border:'#38bdf8'},
+    font:{color:'#e2e8f0', size:18, face:'Inter'}
+  }));
+  const edges = ig.edges.map(e => {
+    const color = e.sign==='+'?'#22c55e' : e.sign==='-'?'#ef4444' : '#94a3b8';
+    return {
+      from:e.source, to:e.target,
+      label:e.sign, color:{color, highlight:color, inherit:false},
+      font:{color, size:16, strokeWidth:0, background:'rgba(255,255,255,.85)'},
+      arrows:{ to:{ enabled:true, scaleFactor:1.0, type: e.sign==='-' ? 'bar' : 'arrow' } },
+      smooth:{type:'curvedCW', roundness:0.15},
+      width:2
+    };
+  });
+  const data = { nodes:new vis.DataSet(nodes), edges:new vis.DataSet(edges) };
+  if(igNetwork) igNetwork.destroy();
+  igNetwork = new vis.Network(document.getElementById('igGraph'), data, {
+    physics:{stabilization:{iterations:200}, barnesHut:{springLength:140}},
+    interaction:{hover:true, dragNodes:true, zoomView:true},
+  });
+}
+
+function drawSTG(net, stg, attractors, scheme){
+  const N = stg.N;
+  const attrSet = new Set();
+  for(const a of attractors) for(const s of a.states) attrSet.add(s);
+  const note = document.getElementById('stgNote');
+  if(N > 512){
+    note.innerHTML = `STG has <b>${N}</b> states — too dense to draw fully; rendering only the union of attractors and their <em>weak basins</em>.`;
+    // collect basins
+    const visible = new Set();
+    for(const a of attractors){
+      const basin = weakBasin(N, stg.out, a.states);
+      for(const v of basin) visible.add(v);
+    }
+    const cap = Math.min(visible.size, 600);
+    let i=0; const trim = new Set();
+    for(const v of visible){ if(i++ < cap) trim.add(v); else break; }
+    return _drawSTGSubset(net, stg, trim, attrSet);
+  }
+  note.textContent = `Rendering all ${N} states.`;
+  return _drawSTGSubset(net, stg, null, attrSet);
+}
+
+function _drawSTGSubset(net, stg, subset, attrSet){
+  const nodes = [], edges = [];
+  const include = id => subset===null || subset.has(id);
+  for(let id=0; id<stg.N; id++){
+    if(!include(id)) continue;
+    const lbl = net.stateToStr(idToState(id, net.n));
+    const inAttr = attrSet.has(id);
+    nodes.push({
+      id, label:lbl,
+      color:{background: inAttr?'#facc15':'#bae6fd', border: inAttr?'#a16207':'#0284c7'},
+      font:{color:'#0b1020', size:13, face:'JetBrains Mono'}
+    });
+    for(const w of stg.out[id]){
+      if(!include(w)) continue;
+      edges.push({from:id, to:w, arrows:'to', color:{color:'#94a3b8', opacity:0.55, inherit:false}, smooth:{enabled:true, type:'continuous'}});
+    }
+  }
+  const data = { nodes:new vis.DataSet(nodes), edges:new vis.DataSet(edges) };
+  if(stgNetwork) stgNetwork.destroy();
+  stgNetwork = new vis.Network(document.getElementById('stgGraph'), data, {
+    physics:{stabilization:{iterations:120}, barnesHut:{springLength:110, gravitationalConstant:-12000}},
+    interaction:{hover:true, dragNodes:true, zoomView:true},
+  });
+}
+
+/* ============================================================== */
+/* Wire up the UI                                                 */
+/* ============================================================== */
+const $ = id => document.getElementById(id);
+let CURRENT = null;          // {net, stg, attractors, scheme}
+let CURRENT_SIM = null;      // {state, history}
+
+function setError(msg){
+  const box = $('errBox');
+  if(!msg){ box.innerHTML=''; return; }
+  box.innerHTML = `<div class="alert">${msg}</div>`;
+}
+
+function loadSample(key){
+  if(!key) return;
+  $('src').value = SAMPLES[key] || '';
+}
+
+function renderRules(net){
+  const body = $('rulesBody');
+  let h = '<table class="data"><thead><tr><th>Node</th><th>Rule</th><th>Inputs</th></tr></thead><tbody>';
+  for(const n of net.nodes){
+    const r = net.rules[n];
+    h += `<tr><td class="mono">${n}</td><td class="mono">${escapeHtml(r.expression)}</td><td class="mono">${r.inputs.join(', ')||'—'}</td></tr>`;
+  }
+  h += '</tbody></table>';
+  body.innerHTML = h;
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function classToPill(kind){
+  if(kind==='fixed_point') return '<span class="pill fp">fixed point</span>';
+  if(kind==='cyclic') return '<span class="pill cy">cyclic</span>';
+  return '<span class="pill cx">complex</span>';
+}
+
+function renderAttractors(net, attractors, stg){
+  const body = $('attBody');
+  if(!attractors.length){
+    body.innerHTML = '<p style="color:var(--muted)">No attractor found (this should not happen for a finite STG).</p>';
+    return;
+  }
+  let h = `<p style="color:var(--muted);margin:.2rem 0 .9rem">${attractors.length} attractor${attractors.length>1?'s':''} found.</p>`;
+  attractors.forEach((a, i) => {
+    const basin = weakBasin(stg.N, stg.out, a.states);
+    const labels = a.states.map(s => net.stateToStr(idToState(s, net.n)));
+    h += `<details ${i<3?'open':''}>
+      <summary>#${i+1} — ${classToPill(a.kind)} — ${a.states.length} state${a.states.length>1?'s':''} — basin: ${basin.length}/${stg.N} (${(100*basin.length/stg.N).toFixed(1)}%)</summary>
+      <div style="overflow:auto"><table class="data">
+      <thead><tr><th>#</th>${net.nodes.map(n=>`<th class="mono">${n}</th>`).join('')}<th>Binary</th></tr></thead>
+      <tbody>`;
+    a.states.forEach((sid, k) => {
+      const s = idToState(sid, net.n);
+      h += `<tr class="attr-row"><td>${k+1}</td>` +
+        net.nodes.map((n,j)=>`<td class="mono">${s[j]}</td>`).join('') +
+        `<td class="mono">${labels[k]}</td></tr>`;
+    });
+    h += '</tbody></table></div></details>';
+  });
+  body.innerHTML = h;
+}
+
+function renderSummary(net, stg, attractors, scheme){
+  const fp = attractors.filter(a=>a.kind==='fixed_point').length;
+  const cy = attractors.filter(a=>a.kind==='cyclic').length;
+  const cx = attractors.filter(a=>a.kind==='complex').length;
+  $('summary').innerHTML = `
+    <div class="stat"><div class="lbl">Nodes</div><div class="val">${net.n}</div></div>
+    <div class="stat"><div class="lbl">States</div><div class="val">${stg.N}</div></div>
+    <div class="stat"><div class="lbl">Update</div><div class="val">${scheme[0].toUpperCase()+scheme.slice(1,4)}.</div></div>
+    <div class="stat"><div class="lbl">Attractors</div><div class="val">${attractors.length}</div></div>
+    <div class="stat"><div class="lbl">Fixed pts</div><div class="val">${fp}</div></div>
+    <div class="stat"><div class="lbl">Cyclic</div><div class="val">${cy}</div></div>
+    ${scheme==='asynchronous'?`<div class="stat"><div class="lbl">Complex</div><div class="val">${cx}</div></div>`:''}
+  `;
+}
+
+function setupSimulator(net){
+  const init = '0'.repeat(net.n);
+  $('initState').value = init;
+  CURRENT_SIM = { state: net.strToState(init), history: [{step:0, state: net.strToState(init), updated:'—'}] };
+  renderSim(net);
+}
+function renderSim(net){
+  const h = CURRENT_SIM.history;
+  let html = '<div style="overflow:auto"><table class="data"><thead><tr><th>Step</th>' +
+    net.nodes.map(n=>`<th class="mono">${n}</th>`).join('') + '<th>Binary</th><th>Updated</th></tr></thead><tbody>';
+  for(const row of h){
+    html += `<tr><td>${row.step}</td>` +
+      net.nodes.map((n,j)=>`<td class="mono">${row.state[j]}</td>`).join('') +
+      `<td class="mono">${net.stateToStr(row.state)}</td><td class="mono">${row.updated}</td></tr>`;
+  }
+  html += '</tbody></table></div>';
+  $('simBody').innerHTML = html;
+}
+function simStep(net, scheme){
+  const s = CURRENT_SIM.state;
+  const next = net.evalAll(s);
+  if(scheme === 'synchronous'){
+    CURRENT_SIM.state = next;
+    CURRENT_SIM.history.push({ step: CURRENT_SIM.history.length, state: next, updated: 'all (sync)' });
+  } else {
+    const diffs = [];
+    for(let i=0;i<net.n;i++) if(s[i]!==next[i]) diffs.push(i);
+    if(diffs.length === 0){
+      CURRENT_SIM.history.push({ step: CURRENT_SIM.history.length, state: s, updated: '— fixed point —' });
+    } else {
+      // round-robin: pick the smallest-indexed differing node
+      const idx = diffs[CURRENT_SIM.history.length % diffs.length];
+      const flipped = new Uint8Array(s);
+      flipped[idx] = next[idx];
+      CURRENT_SIM.state = flipped;
+      CURRENT_SIM.history.push({ step: CURRENT_SIM.history.length, state: flipped, updated: net.nodes[idx] });
+    }
+  }
+  renderSim(net);
+}
+
+function getScheme(){
+  return document.querySelector('.seg button.on').dataset.scheme;
+}
+
+async function runAnalysis(){
+  setError('');
+  const t0 = performance.now();
+  let net, stg, attractors;
+  const scheme = getScheme();
+  try {
+    const parsed = parseBnet($('src').value);
+    net = new BooleanNetwork(parsed);
+    stg = buildSTG(net, scheme);
+    attractors = findAttractors(stg.N, stg.out, scheme);
+  } catch(e){
+    setError(`<b>${e.name||'Error'}:</b> ${escapeHtml(e.message)}`);
+    return;
+  }
+  CURRENT = { net, stg, attractors, scheme };
+  drawInfluenceGraph(net);
+  drawSTG(net, stg, attractors, scheme);
+  renderAttractors(net, attractors, stg);
+  renderRules(net);
+  renderSummary(net, stg, attractors, scheme);
+  setupSimulator(net);
+  const t1 = performance.now();
+  console.log(`Analysis: ${(t1-t0).toFixed(1)}ms — ${net.n} nodes, ${stg.N} states, ${attractors.length} attractors.`);
+}
+
+function downloadJSON(){
+  if(!CURRENT){ setError('Run an analysis first.'); return; }
+  const {net, stg, attractors, scheme} = CURRENT;
+  const data = {
+    scheme, n: net.n, nodes: net.nodes,
+    rules: net.nodes.map(n => ({ target:n, expression: net.rules[n].expression, inputs: net.rules[n].inputs })),
+    influence_edges: net.influenceGraph().edges,
+    attractors: attractors.map(a => ({
+      kind: a.kind, size: a.states.length,
+      states: a.states.map(s => net.stateToStr(idToState(s, net.n))),
+      basin_size: weakBasin(stg.N, stg.out, a.states).length
+    })),
+    n_states: stg.N
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  triggerDownload(blob, `bnanalyzer_${scheme}.json`);
+}
+
+function downloadCSV(){
+  if(!CURRENT){ setError('Run an analysis first.'); return; }
+  const {net, stg, attractors, scheme} = CURRENT;
+  const rows = [['attractor_id','kind','size','basin_size','state_index','state_binary',...net.nodes]];
+  attractors.forEach((a, i) => {
+    const basin = weakBasin(stg.N, stg.out, a.states).length;
+    a.states.forEach((sid, k) => {
+      const s = idToState(sid, net.n);
+      rows.push([i+1, a.kind, a.states.length, basin, k+1, net.stateToStr(s), ...Array.from(s)]);
+    });
+  });
+  const csv = rows.map(r => r.map(c => `${c}`.includes(',')?`"${c}"`:c).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  triggerDownload(blob, `bnanalyzer_${scheme}.csv`);
+}
+
+function triggerDownload(blob, name){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.toggle('active', x===b));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'tab-'+b.dataset.tab));
+  if(b.dataset.tab === 'ig' && igNetwork) igNetwork.fit();
+  if(b.dataset.tab === 'stg' && stgNetwork) stgNetwork.fit();
+}));
+
+// Scheme toggle
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', ()=>{
+  document.querySelectorAll('.seg button').forEach(x => x.classList.toggle('on', x===b));
+  if(CURRENT) runAnalysis();
+}));
+
+// Sample / file / source
+$('sampleSel').addEventListener('change', e => loadSample(e.target.value));
+$('fileInp').addEventListener('change', async e => {
+  const f = e.target.files[0]; if(!f) return;
+  const txt = await f.text();
+  $('src').value = txt;
+  $('sampleSel').value = '';
+});
+$('runBtn').addEventListener('click', runAnalysis);
+$('dlJson').addEventListener('click', downloadJSON);
+$('dlCsv').addEventListener('click', downloadCSV);
+
+// Simulator buttons
+$('simStep').addEventListener('click', ()=>{
+  if(!CURRENT) return;
+  simStep(CURRENT.net, CURRENT.scheme);
+});
+$('simRun').addEventListener('click', ()=>{
+  if(!CURRENT) return;
+  for(let i=0;i<20;i++) simStep(CURRENT.net, CURRENT.scheme);
+});
+$('simReset').addEventListener('click', ()=>{
+  if(!CURRENT) return;
+  const txt = $('initState').value.trim();
+  if(!/^[01]+$/.test(txt) || txt.length !== CURRENT.net.n){
+    setError(`Initial state must be a binary string of length ${CURRENT.net.n}.`);
+    return;
+  }
+  setError('');
+  CURRENT_SIM = { state: CURRENT.net.strToState(txt), history: [{step:0, state: CURRENT.net.strToState(txt), updated:'—'}] };
+  renderSim(CURRENT.net);
+});
+
+// First-load
+loadSample('bistable');
+runAnalysis();
+</script>
+</body>
+</html>

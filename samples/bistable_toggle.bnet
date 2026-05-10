@@ -1,0 +1,8 @@
+# Classic bistable toggle switch (mutual repression).
+# Two genes, A and B, each repressing the other. Two stable steady states:
+# (A=1, B=0) and (A=0, B=1).
+# Reference: Gardner et al., Nature 2000.
+
+targets, factors
+A, !B
+B, !A
