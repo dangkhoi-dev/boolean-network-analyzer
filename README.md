@@ -4,9 +4,8 @@
 > *Đồ án Tổng hợp - hướng Trí tuệ Nhân tạo*
 > Author: **Tran Phan Dang Khoi** (Student ID 2352626)
 
-A Python toolkit, a Streamlit web application, **and a fully in-browser live
-demo** for parsing, simulating, and analyzing Boolean networks. Implements
-every requirement of the assignment:
+A Python toolkit **and a fully in-browser live demo** for parsing, simulating, and
+analyzing Boolean networks. Implements every requirement of the assignment:
 
 1. Import a Boolean network from a `.bnet` file
 2. Visualize the influence graph (with sign-annotated edges)
@@ -14,44 +13,50 @@ every requirement of the assignment:
    **asynchronous** update schemes
 4. Compute every attractor (fixed point, cyclic, complex) and its basin
 
-> **▶ Live demo (no install):** once GitHub Pages is enabled (see *Deploy the
-> landing page* below) the demo is served at
-> `https://<your-username>.github.io/<repo-name>/app.html`.
-> Pure HTML + JavaScript — the parser, STG construction, Tarjan SCC and
-> attractor classification all run in your browser. Verified against the
-> Python reference engine on all five bundled samples (synchronous *and*
-> asynchronous): every attractor — kind, size, and member states — matches.
+> **▶ Live demo (no install):** The demo runs entirely in your browser (pure HTML +
+> JavaScript) and is available at:
+> - **GitHub Pages:** `https://<your-username>.github.io/<repo-name>/app.html` (if deployed)
+> - **Local http-server:** `python -m http.server --directory docs 8000` then visit
+>   `http://localhost:8000/app.html`
+>
+> The parser, STG construction, Tarjan SCC, and attractor classification all run
+> client-side. Verified against the Python reference engine on all five bundled
+> samples (synchronous *and* asynchronous): every attractor — kind, size, and
+> member states — matches.
 
 ![STG of the repressilator](docs/img/stg_sync_repressilator.png)
 
 ---
 
-## Quick start
+## Try the demo
+
+**Option 1: Online (if deployed to GitHub Pages)**
+
+Visit `https://<your-username>.github.io/<repo-name>/app.html` (see
+*Deploy the landing page* section below).
+
+**Option 2: Local http-server (no setup required)**
 
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/<your-username>/boolean-network-analyzer.git
 cd boolean-network-analyzer
 
-# 2. (Optional) create a virtual environment
-python -m venv .venv
-source .venv/bin/activate         # on Windows: .venv\Scripts\activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Launch the Streamlit app
-streamlit run app.py
+# Start a local web server
+python -m http.server --directory docs 8000
 ```
 
-The app opens at <http://localhost:8501>. Pick a sample from the sidebar or
+Then open <http://localhost:8000/app.html> in your browser. Pick a sample or
 upload your own `.bnet` file.
+
+**Option 3: Use the Python API**
+
+For programmatic analysis, see *Programmatic use* below.
 
 ## Repository layout
 
 ```
 .
-├── app.py                       # Streamlit entry point
 ├── src/bnanalyzer/              # Core engine (importable Python package)
 │   ├── parser.py                # .bnet parser
 │   ├── network.py               # BooleanNetwork class + influence graph
@@ -113,7 +118,17 @@ for a in attractors:
 
 ## Running the tests
 
+To run the test suite, you'll need the Python dependencies:
+
 ```bash
+# Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate         # on Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the tests
 PYTHONPATH=src pytest -v
 ```
 
@@ -125,7 +140,7 @@ sanity checks on every bundled sample.
 
 The `docs/` folder is a self-contained static site that contains:
 
-- `index.html` &mdash; project landing page with screenshots and install instructions.
+- `index.html` &mdash; project landing page with screenshots and info.
 - `app.html` &mdash; the interactive **live demo** (no install, no backend).
 - `img/` &mdash; bundled figures.
 
@@ -141,7 +156,7 @@ the site.
 set **Source** to *Deploy from a branch* and **Branch** to `main` /
 folder `/docs`. (Either option ends up at the same URL.)
 
-The live demo is then reachable at
+Once deployed, the live demo is reachable at
 `https://<your-username>.github.io/<repo-name>/app.html` and the landing
 page at `https://<your-username>.github.io/<repo-name>/`.
 
