@@ -1,0 +1,8 @@
+\babel@toc {english}{}\relax 
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Influence Graph của mạng \textit {toy switch} 3 node. Cạnh xanh: activation (+); cạnh đỏ: inhibition (--).}}{8}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces State Transition Graph (async) của bistable toggle. Hai node màu cam là hai fixed-point attractor; các trạng thái \texttt {00} và \texttt {11} là transient.}}{11}{figure.caption.11}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces STG synchronous của repressilator. Các node màu cam thuộc về attractor; vòng 6 trạng thái biểu diễn dao động sinh học, vòng 2 trạng thái là artifact của sync.}}{13}{figure.caption.13}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Kiến trúc tổng thể phần mềm Boolean Network Analyzer}}{16}{figure.caption.15}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Giao diện trang chủ giới thiệu phần mềm Boolean Network Analyzer.}}{23}{figure.caption.17}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Giao diện Live Demo trên trình duyệt, đang hiển thị Đồ thị ảnh hưởng (Influence Graph) của mạng tế bào Mammalian 10 nodes.}}{23}{figure.caption.18}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Tổng hợp kết quả render trực quan đồ thị STG và Influence Graph cho mạng Repressilator, Bistable Toggle và Toy Switch từ giao diện phần mềm.}}{25}{figure.caption.20}%

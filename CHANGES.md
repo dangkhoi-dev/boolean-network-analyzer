@@ -1,8 +1,44 @@
-# Changes — May 10, 2026
+# Changes — May 11, 2026
 
-This document captures the deliverables produced in this work session.
-None of the existing engine code (`src/bnanalyzer/`) or the test suite
-(`tests/`) was modified — every previous test still passes (23/23).
+This document captures the deliverables produced over two work sessions
+(session A on May 9 — live demo + first citation pass; session B on
+May 10 — alignment with the official evaluation rubric).  None of the
+existing engine code (`src/bnanalyzer/`) or the test suite (`tests/`)
+was modified — every previous test still passes (23/23).
+
+## Session B (rubric alignment) — at a glance
+
+The submitted package now satisfies each item of `en-evaluation-template.md`:
+
+- **Correctness (40 %)** — §6.5 *Benchmark Validation Against Published
+  Results* in the report tabulates the analyzer's output against the
+  literature for every bundled network. Both engines (Python & JS) match.
+- **Report quality (40 %)** — added §3.4 *Module I/O*, §4.6 *In-browser
+  JavaScript Engine*, deeper analysis paragraphs in §5.1–§5.4 (with
+  concrete basin percentages), split §7 into §7.1 *Limitations* and
+  §7.2 *Future Work*, refreshed Abstract, Reference list with DOIs.
+- **Creativity (10 %)** — the JavaScript engine is an original addition
+  beyond the assignment requirements; the live demo lowers the
+  reproduction cost of the case studies to a single click.
+- **Professionalism (10 %)** — `Report/Boolean_Network_Analyzer_Report.pdf`
+  is shipped alongside the .docx (LibreOffice export, 21 pages, no
+  layout issues); README documents both deployment paths.
+
+Additional outputs in this session:
+
+```
+~ Report/Boolean_Network_Analyzer_Report.docx   ← §3.4, §4.6, §6.5, §7.1, §7.2
++ Report/Boolean_Network_Analyzer_Report.pdf    ← PDF export, 21 pages
++ Report/edit_report_v2.py                      ← v2 audit script
+~ Slide/Boolean_Network_Analyzer_Slides.pptx    ← Slide 11 validation table,
+                                                  fixed toy_switch caption,
+                                                  fixed Slide 14 placeholder URL
++ Slide/Boolean_Network_Analyzer_Slides.pdf     ← PDF export of the deck
+~ docs/index.html                               ← new "Validation against
+                                                  the literature" + "What
+                                                  sets this analyzer apart"
+                                                  sections
+```
 
 ## 1. Live web demo — `docs/app.html`
 

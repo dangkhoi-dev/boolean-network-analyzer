@@ -197,6 +197,17 @@
       <button id="schAsync" data-scheme="asynchronous">Async</button>
     </div>
 
+    <h2>STG Options</h2>
+    <div class="field" style="margin-top:0.4rem">
+      <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.85rem; color:var(--text); cursor:pointer;">
+        <input type="checkbox" id="fullStateSp" checked />
+        Build full state space (2ⁿ)
+      </label>
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem; line-height:1.4">
+        Disable for large networks (n &gt; 12) to only explore states reachable from the all-zero state via BFS.
+      </p>
+    </div>
+
     <h2>Run</h2>
     <div class="btn-row">
       <button class="btn btn-primary" id="runBtn">▶ Analyze</button>
@@ -230,6 +241,13 @@
     </div>
 
     <div id="tab-ig" class="tab-pane active">
+      <div style="position: absolute; right: 2rem; margin-top: 0.5rem; z-index: 10;">
+  <button class="btn btn-ghost" id="dlIgPng" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: var(--bg-2);">⬇ PNG</button>
+</div>
+
+<div style="position: absolute; right: 2rem; margin-top: 0.5rem; z-index: 10;">
+  <button class="btn btn-ghost" id="dlStgPng" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: var(--bg-2);">⬇ PNG</button>
+</div>
       <div class="legend">
         <span><span class="swatch" style="background:#22c55e"></span>activator (+)</span>
         <span><span class="swatch" style="background:#ef4444"></span>inhibitor (−)</span>
@@ -239,6 +257,9 @@
     </div>
 
     <div id="tab-stg" class="tab-pane">
+      <div style="position: absolute; right: 2rem; margin-top: 0.5rem; z-index: 10;">
+        <button class="btn btn-ghost" id="dlStgPng" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: var(--bg-2);">⬇ PNG</button>
+      </div>
       <div class="legend">
         <span><span class="swatch" style="background:#facc15"></span>state in an attractor</span>
         <span><span class="swatch" style="background:#bae6fd"></span>transient state</span>
@@ -259,8 +280,11 @@
       </div>
       <div class="field" style="display:flex;gap:.6rem;align-items:end;flex-wrap:wrap">
         <div style="flex:1;min-width:160px">
-          <label for="initState">Initial state (binary)</label>
-          <input type="text" id="initState" />
+          <div class="field" style="flex:1; min-width:100%;">
+            <label>Initial state (Toggles)</label>
+            <div id="simToggles" style="display: flex; gap: 1rem; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+              </div>
+          </div>
         </div>
         <div>
           <button class="btn btn-ghost" id="simReset">Reset</button>
@@ -520,39 +544,79 @@ function idToState(id, n){
   return a;
 }
 
-function buildSTG(net, scheme){
+function buildSTG(net, scheme, buildFull){
   const n = net.n;
   const N = 1 << n;
-  if(N > 1 << 16) throw new Error(`Network has ${n} nodes (2^n = ${N} states); browser demo limited to ≤16 nodes.`);
-  // out[i] = array of successor ids (1 element under sync)
+  if(buildFull && N > (1 << 16)) throw new Error(`Network has ${n} nodes (2^n = ${N} states); browser demo limited to ≤16 nodes in full space.`);
+
   const out = new Array(N);
-  for(let id=0; id<N; id++){
-    const s = idToState(id, n);
-    const next = net.evalAll(s);
-    if(scheme === 'synchronous'){
-      out[id] = [stateToId(next, n)];
-    } else {
-      const succ = [];
-      let any = false;
-      for(let i=0;i<n;i++){
-        if(s[i] !== next[i]){
-          const flipped = new Uint8Array(s);
-          flipped[i] = next[i];
-          succ.push(stateToId(flipped, n));
-          any = true;
+  const reachableNodes = [];
+
+  if(buildFull){
+    for(let id=0; id<N; id++){
+      const s = idToState(id, n);
+      const next = net.evalAll(s);
+      if(scheme === 'synchronous'){
+        out[id] = [stateToId(next, n)];
+      } else {
+        const succ = [];
+        let any = false;
+        for(let i=0;i<n;i++){
+          if(s[i] !== next[i]){
+            const flipped = new Uint8Array(s);
+            flipped[i] = next[i];
+            succ.push(stateToId(flipped, n));
+            any = true;
+          }
         }
+        if(!any) succ.push(id);
+        out[id] = succ;
       }
-      if(!any) succ.push(id); // self-loop at fixed point
-      out[id] = succ;
+      reachableNodes.push(id);
+    }
+  } else {
+    // BFS Reachable-only từ trạng thái 00..0
+    const queue = [0];
+    out[0] = []; 
+    let head = 0;
+    const seen = new Uint8Array(N);
+    seen[0] = 1;
+
+    while(head < queue.length){
+      const id = queue[head++];
+      reachableNodes.push(id);
+      const s = idToState(id, n);
+      const next = net.evalAll(s);
+
+      if(scheme === 'synchronous'){
+        const nid = stateToId(next, n);
+        out[id] = [nid];
+        if(!seen[nid]){ seen[nid] = 1; queue.push(nid); }
+      } else {
+        const succ = [];
+        let any = false;
+        for(let i=0;i<n;i++){
+          if(s[i] !== next[i]){
+            const flipped = new Uint8Array(s);
+            flipped[i] = next[i];
+            const nid = stateToId(flipped, n);
+            succ.push(nid);
+            if(!seen[nid]){ seen[nid] = 1; queue.push(nid); }
+            any = true;
+          }
+        }
+        if(!any) succ.push(id);
+        out[id] = succ;
+      }
     }
   }
-  return { N, out };
+  return { N, out, reachableNodes };
 }
 
 /* ============================================================== */
 /* Tarjan's SCC + terminal SCC extraction (attractors)            */
 /* ============================================================== */
-function tarjanSCC(N, out){
+function tarjanSCC(N, out, reachableNodes){
   const indices = new Int32Array(N).fill(-1);
   const low = new Int32Array(N);
   const onStack = new Uint8Array(N);
@@ -561,7 +625,8 @@ function tarjanSCC(N, out){
   let index = 0;
   const callStack = [];
   // iterative Tarjan to avoid recursion-stack overflow on big graphs
-  for(let v0 = 0; v0 < N; v0++){
+  for(let k = 0; k < reachableNodes.length; k++){
+    const v0 = reachableNodes[k];
     if(indices[v0] !== -1) continue;
     callStack.push({v:v0, pi:0});
     indices[v0] = index; low[v0] = index; index++;
@@ -597,8 +662,8 @@ function tarjanSCC(N, out){
   return sccs;
 }
 
-function findAttractors(N, out, scheme){
-  const sccs = tarjanSCC(N, out);
+function findAttractors(N, out, scheme, reachableNodes){
+  const sccs = tarjanSCC(N, out, reachableNodes);
   // Map state -> scc index
   const compOf = new Int32Array(N);
   for(let i=0;i<sccs.length;i++) for(const v of sccs[i]) compOf[v]=i;
@@ -642,7 +707,11 @@ function findAttractors(N, out, scheme){
 function weakBasin(N, out, attractorStates){
   const reverse = new Array(N);
   for(let i=0;i<N;i++) reverse[i] = [];
-  for(let v=0;v<N;v++) for(const w of out[v]) reverse[w].push(v);
+  for(let v=0;v<N;v++) {
+    if (out[v]) { // Bọc lại để chống lỗi undefined cho node không duyệt tới
+      for(const w of out[v]) reverse[w].push(v);
+    }
+  }
   const seen = new Uint8Array(N);
   const stack = [...attractorStates];
   for(const s of attractorStates) seen[s] = 1;
@@ -712,7 +781,7 @@ function _drawSTGSubset(net, stg, subset, attrSet){
   const nodes = [], edges = [];
   const include = id => subset===null || subset.has(id);
   for(let id=0; id<stg.N; id++){
-    if(!include(id)) continue;
+    if(!include(id) || !stg.out[id]) continue;
     const lbl = net.stateToStr(idToState(id, net.n));
     const inAttr = attrSet.has(id);
     nodes.push({
@@ -814,11 +883,38 @@ function renderSummary(net, stg, attractors, scheme){
 }
 
 function setupSimulator(net){
-  const init = '0'.repeat(net.n);
-  $('initState').value = init;
-  CURRENT_SIM = { state: net.strToState(init), history: [{step:0, state: net.strToState(init), updated:'—'}] };
+  const container = $('simToggles');
+  let html = '';
+  for(let i=0; i<net.n; i++){
+    html += `<label style="display:flex; align-items:center; gap:0.3rem; font-family:'JetBrains Mono',monospace; font-size:0.85rem; cursor:pointer;">
+               <input type="checkbox" class="sim-cb" data-idx="${i}" /> ${net.nodes[i]}
+             </label>`;
+  }
+  container.innerHTML = html;
+
+  document.querySelectorAll('.sim-cb').forEach(cb => {
+     cb.addEventListener('change', () => resetSimulationFromToggles(net));
+  });
+  resetSimulationFromToggles(net);
+}
+
+function resetSimulationFromToggles(net) {
+  const cbs = document.querySelectorAll('.sim-cb');
+  const stateArr = new Uint8Array(net.n);
+  cbs.forEach(cb => {
+     stateArr[cb.dataset.idx] = cb.checked ? 1 : 0;
+  });
+  CURRENT_SIM = {
+      state: stateArr,
+      history: [{step:0, state: new Uint8Array(stateArr), updated:'—'}]
+  };
   renderSim(net);
 }
+
+$('simReset').addEventListener('click', ()=>{
+  if(!CURRENT) return;
+  resetSimulationFromToggles(CURRENT.net);
+});
 function renderSim(net){
   const h = CURRENT_SIM.history;
   let html = '<div style="overflow:auto"><table class="data"><thead><tr><th>Step</th>' +
@@ -863,11 +959,12 @@ async function runAnalysis(){
   const t0 = performance.now();
   let net, stg, attractors;
   const scheme = getScheme();
+  const buildFull = $('fullStateSp').checked; // Lấy giá trị checkbox
   try {
     const parsed = parseBnet($('src').value);
     net = new BooleanNetwork(parsed);
-    stg = buildSTG(net, scheme);
-    attractors = findAttractors(stg.N, stg.out, scheme);
+    stg = buildSTG(net, scheme, buildFull);
+    attractors = findAttractors(stg.N, stg.out, scheme, stg.reachableNodes);
   } catch(e){
     setError(`<b>${e.name||'Error'}:</b> ${escapeHtml(e.message)}`);
     return;
@@ -959,19 +1056,29 @@ $('simRun').addEventListener('click', ()=>{
   if(!CURRENT) return;
   for(let i=0;i<20;i++) simStep(CURRENT.net, CURRENT.scheme);
 });
-$('simReset').addEventListener('click', ()=>{
-  if(!CURRENT) return;
-  const txt = $('initState').value.trim();
-  if(!/^[01]+$/.test(txt) || txt.length !== CURRENT.net.n){
-    setError(`Initial state must be a binary string of length ${CURRENT.net.n}.`);
-    return;
-  }
-  setError('');
-  CURRENT_SIM = { state: CURRENT.net.strToState(txt), history: [{step:0, state: CURRENT.net.strToState(txt), updated:'—'}] };
-  renderSim(CURRENT.net);
-});
 
 // First-load
+function downloadVisCanvas(networkObj, filename) {
+  if(!networkObj) return;
+  const canvas = networkObj.canvas.frame.canvas;
+  
+  // Tạo canvas tạm với nền trắng (vì vis.js mặc định nền trong suốt)
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+  const ctx = tempCanvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+  ctx.drawImage(canvas, 0, 0);
+
+  const a = document.createElement('a');
+  a.href = tempCanvas.toDataURL('image/png');
+  a.download = filename;
+  a.click();
+}
+
+$('dlIgPng').addEventListener('click', () => downloadVisCanvas(igNetwork, 'influence_graph.png'));
+$('dlStgPng').addEventListener('click', () => downloadVisCanvas(stgNetwork, 'stg.png'));
 loadSample('bistable');
 runAnalysis();
 </script>

@@ -1,0 +1,110 @@
+\ProvidesPackage{codespace}
+
+% Options can be used to add more predefined colors (see Section 4)
+% e.g.: dvipsnames, svgnames, x11names
+\RequirePackage{xcolor}
+
+\RequirePackage{tikz}
+\RequirePackage[framemethod=tikz]{mdframed}
+\RequirePackage{listings,lstautogobble}
+\RequirePackage{minted,verbatim}
+
+% Configurations
+\colorlet{codebackground}{magenta!10}
+\definecolor{codebasic}{RGB}{106,106,106}
+\definecolor{codeidentifier}{RGB}{0,0,0}
+\definecolor{codecomment}{RGB}{0,136,0}
+\definecolor{codestring}{RGB}{187,68,68}
+\definecolor{codekeyword}{RGB}{170,34,255}
+
+\lstdefinestyle{codeframe}{
+  float=H,
+  frame=lines,
+  backgroundcolor=\color{codebackground},
+}
+\lstdefinestyle{codestyle}{
+  basicstyle=\color{codebasic}\ttfamily,
+  identifierstyle=\color{codeidentifier},
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  keywordstyle=\color{codekeyword},
+  numbers=left,
+  %firstnumber=1,
+  numbersep=2pt,
+  numberstyle=\tiny,
+  autogobble=true,
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2
+}
+\lstset{
+  style=codeframe,
+  style=codestyle
+}
+
+\mdfsetup{
+  leftline=false,
+  rightline=false,
+  backgroundcolor=codebackground,
+  nobreak=false
+}
+\usemintedstyle{emacs}
+\setminted{
+  linenos=true,
+  numbers=left,
+  %firstnumber=1,
+  autogobble=true,
+  breaklines=true,
+  breaksymbolleft={},
+  tabsize=2
+}
+
+\newenvironment{code}[1]{
+  \VerbatimEnvironment%
+  \begin{mdframed}%
+    \begin{minted}{#1}%
+}{
+    \end{minted}%
+  \end{mdframed}%
+}
+
+\newenvironment{altcode}[1]{
+  \VerbatimEnvironment%
+  \begin{mdframed}[backgroundcolor=gray!10]%
+    \begin{minted}{#1}%
+}{
+    \end{minted}%
+  \end{mdframed}%
+}
+
+\newcommand{\inputcode}[3][]{
+  \begin{mdframed}%
+    \inputminted[#1]{#2}{#3}%
+  \end{mdframed}%
+}
+
+% --- CÀI ĐẶT FOOTER THEO YÊU CẦU ---
+\pagestyle{fancy} % Kích hoạt style fancy
+\fancyhf{} % Xóa tất cả cài đặt header và footer cũ
+
+% Thiết lập nội dung header (đầu trang) - bây giờ để trống
+% Sử dụng \makeatletter để có thể dùng các lệnh chứa ký tự @
+\makeatletter
+\fancyhead[L]{%
+  \begin{tabular}{ll}
+    % Dùng multirow để logo căn giữa theo chiều dọc với 2 dòng text
+    % Bạn có thể cần package "multirow", nhưng file của bạn đã có sẵn rồi
+    \multirow{2}{*}{\includegraphics[height=1cm]{graphics/hcmut.png}} & \ttfamily\@uniname \\
+    & \ttfamily\@deptname
+  \end{tabular}%
+}
+\makeatother
+
+% Thiết lập nội dung footer (chân trang)
+\fancyfoot[L]{Assignment Report - Programming Integration Project - Semester 252} % L = Left (bên trái)
+\fancyfoot[R]{Page \thepage/\pageref{LastPage}} % R = Right (bên phải)
+
+% Thiết lập đường kẻ ngang
+\renewcommand{\headrulewidth}{0.4pt}   % KHÔNG có đường kẻ ở header
+\renewcommand{\footrulewidth}{0.4pt} % Độ dày đường kẻ của footer
+% --- KẾT THÚC CÀI ĐẶT FOOTER ---

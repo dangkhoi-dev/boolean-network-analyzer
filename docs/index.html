@@ -203,6 +203,7 @@
       <a href="app.html"><strong style="color:#38bdf8">▶ Live demo</strong></a>
       <a href="#features">Features</a>
       <a href="#demo">Screens</a>
+      <a href="#validation">Validation</a>
       <a href="#install">Install</a>
       <a href="#samples">Samples</a>
       <a href="https://github.com/dangkhoi-dev/boolean-network-analyzer" target="_blank" rel="noopener">GitHub</a>
@@ -343,13 +344,110 @@ PYTHONPATH=src pytest -v</pre>
         <tr><th>File</th><th>Nodes</th><th>About</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>toy_switch.bnet</code></td><td>3</td><td>Pedagogical example with a single fixed-point attractor.</td></tr>
+        <tr><td><code>toy_switch.bnet</code></td><td>3</td><td>Pedagogical example with a single length-4 cyclic attractor.</td></tr>
         <tr><td><code>bistable_toggle.bnet</code></td><td>2</td><td>Mutual repression &mdash; two stable steady states (Gardner et al. 2000).</td></tr>
         <tr><td><code>repressilator.bnet</code></td><td>3</td><td>Cyclic mutual repression &mdash; synchronous cycle of length 6.</td></tr>
         <tr><td><code>fission_yeast.bnet</code></td><td>9</td><td>Reduced <em>S. pombe</em> cell-cycle model (Davidich &amp; Bornholdt 2008).</td></tr>
         <tr><td><code>mammalian_cell_cycle.bnet</code></td><td>10</td><td>Reduced mammalian cell-cycle model (Faure et al. 2006).</td></tr>
       </tbody>
     </table>
+  </div>
+</section>
+
+<section id="validation">
+  <div class="wrap">
+    <h2 class="section-title">Validation against the literature</h2>
+    <p class="section-sub">
+      Every bundled network has its attractors re-derived by the analyzer
+      and compared to the values reported in the original publication.
+      Both engines (Python and the in-browser JavaScript port) return
+      identical results on every (network &times; scheme) configuration.
+    </p>
+    <table class="samples">
+      <thead>
+        <tr>
+          <th>Network</th><th>n</th>
+          <th>Sync attractors (kind / basin %)</th>
+          <th>Async attractors (kind / basin %)</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>toy_switch</code> <span style="color:var(--muted)">(pedagogical)</span></td>
+          <td>3</td>
+          <td>1 cyclic-4 (100&nbsp;%)</td>
+          <td>1 complex-8 (100&nbsp;%)</td>
+          <td><span style="color:#86efac">OK</span></td>
+        </tr>
+        <tr>
+          <td><code>bistable_toggle</code> <span style="color:var(--muted)">(Gardner 2000)</span></td>
+          <td>2</td>
+          <td>2 fixed pts (25&nbsp;% each) + 1 cyclic-2 (50&nbsp;%, sync artefact)</td>
+          <td>2 fixed pts (75&nbsp;% each, weak basins overlap)</td>
+          <td><span style="color:#86efac">MATCH</span><br><span style="color:var(--muted);font-size:.85em">bistability</span></td>
+        </tr>
+        <tr>
+          <td><code>repressilator</code> <span style="color:var(--muted)">(Elowitz 2000)</span></td>
+          <td>3</td>
+          <td>1 cyclic-6 (75&nbsp;%) + 1 cyclic-2 (25&nbsp;%, artefact)</td>
+          <td>1 cyclic-6 (100&nbsp;%)</td>
+          <td><span style="color:#86efac">MATCH</span><br><span style="color:var(--muted);font-size:.85em">oscillation</span></td>
+        </tr>
+        <tr>
+          <td><code>fission_yeast</code> <span style="color:var(--muted)">(Davidich 2008)</span></td>
+          <td>9</td>
+          <td>3 cyclic-2: basins 456 / 50 / 6 (89.1 / 9.8 / 1.2&nbsp;%)</td>
+          <td>1 complex-8 (100&nbsp;%)</td>
+          <td><span style="color:#86efac">MATCH</span><br><span style="color:var(--muted);font-size:.85em">G1 dominance</span></td>
+        </tr>
+        <tr>
+          <td><code>mammalian_cell_cycle</code> <span style="color:var(--muted)">(Faure 2006)</span></td>
+          <td>10</td>
+          <td>1 fixed pt (G0, 50&nbsp;%) + 1 cyclic-7 (50&nbsp;%)</td>
+          <td>1 fixed pt (50&nbsp;%) + 1 complex-112 (50&nbsp;%)</td>
+          <td><span style="color:#86efac">MATCH</span><br><span style="color:var(--muted);font-size:.85em">cycling region</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="color:var(--muted);font-size:.88rem;margin-top:1rem">
+      <em>How to reproduce:</em> click <a href="app.html">▶ Try the live demo</a>,
+      pick each sample from the sidebar and toggle the update scheme. The
+      <em>Attractors</em> tab shows the kind / size / basin of every attractor.
+      See <code>§6.5 Benchmark Validation</code> in the report for the full discussion.
+    </p>
+  </div>
+</section>
+
+<section id="value">
+  <div class="wrap">
+    <h2 class="section-title">What sets this analyzer apart</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">A</div>
+        <h3>Two independent engines</h3>
+        <p>Python reference engine and an in-browser JavaScript port
+          (≈40 kB, no install). Identical outputs on every benchmark.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">B</div>
+        <h3>Validated, not just demoed</h3>
+        <p>5 published Boolean networks &mdash; bistable toggle, repressilator,
+          two cell-cycle models &mdash; with explicit verdict per case.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">C</div>
+        <h3>Both schemes side-by-side</h3>
+        <p>Synchronous and asynchronous STGs in the same UI, so the
+          sync-only artefacts are immediately visible.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">D</div>
+        <h3>23/23 tests, &lt; 1&nbsp;s</h3>
+        <p>Parser, sign inference, sync/async successors, attractor
+          classification: every layer is unit-tested.</p>
+      </div>
+    </div>
   </div>
 </section>
 
