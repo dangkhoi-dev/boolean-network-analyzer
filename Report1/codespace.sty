@@ -1,4 +1,4 @@
-\ProvidesPackage{codespace}
+﻿\ProvidesPackage{codespace}
 
 % Options can be used to add more predefined colors (see Section 4)
 % e.g.: dvipsnames, svgnames, x11names
@@ -83,28 +83,28 @@
   \end{mdframed}%
 }
 
-% --- CÀI ĐẶT FOOTER THEO YÊU CẦU ---
-\pagestyle{fancy} % Kích hoạt style fancy
-\fancyhf{} % Xóa tất cả cài đặt header và footer cũ
+% --- C├ÇI ─Éß║╢T FOOTER THEO Y├èU Cß║ªU ---
+\pagestyle{fancy} % K├¡ch hoß║ít style fancy
+\fancyhf{} % X├│a tß║Ñt cß║ú c├ái ─æß║╖t header v├á footer c┼⌐
 
-% Thiết lập nội dung header (đầu trang) - bây giờ để trống
-% Sử dụng \makeatletter để có thể dùng các lệnh chứa ký tự @
+% Thiß║┐t lß║¡p nß╗Öi dung header (─æß║ºu trang) - b├óy giß╗¥ ─æß╗â trß╗æng
+% Sß╗¡ dß╗Ñng \makeatletter ─æß╗â c├│ thß╗â d├╣ng c├íc lß╗çnh chß╗⌐a k├╜ tß╗▒ @
 \makeatletter
 \fancyhead[L]{%
   \begin{tabular}{ll}
-    % Dùng multirow để logo căn giữa theo chiều dọc với 2 dòng text
-    % Bạn có thể cần package "multirow", nhưng file của bạn đã có sẵn rồi
+    % D├╣ng multirow ─æß╗â logo c─ân giß╗»a theo chiß╗üu dß╗ìc vß╗¢i 2 d├▓ng text
+    % Bß║ín c├│ thß╗â cß║ºn package "multirow", nh╞░ng file cß╗ºa bß║ín ─æ├ú c├│ sß║╡n rß╗ôi
     \multirow{2}{*}{\includegraphics[height=1cm]{graphics/hcmut.png}} & \ttfamily\@uniname \\
     & \ttfamily\@deptname
   \end{tabular}%
 }
 \makeatother
 
-% Thiết lập nội dung footer (chân trang)
-\fancyfoot[L]{Assignment Report - Programming Integration Project - Semester 252} % L = Left (bên trái)
-\fancyfoot[R]{Page \thepage/\pageref{LastPage}} % R = Right (bên phải)
+% Thiß║┐t lß║¡p nß╗Öi dung footer (ch├ón trang)
+\fancyfoot[L]{Assignment Report - Programming Integration Project - Semester 252} % L = Left (b├¬n tr├íi)
+\fancyfoot[R]{Page \thepage/\pageref{LastPage}} % R = Right (b├¬n phß║úi)
 
-% Thiết lập đường kẻ ngang
-\renewcommand{\headrulewidth}{0.4pt}   % KHÔNG có đường kẻ ở header
-\renewcommand{\footrulewidth}{0.4pt} % Độ dày đường kẻ của footer
-% --- KẾT THÚC CÀI ĐẶT FOOTER ---
+% Thiß║┐t lß║¡p ─æ╞░ß╗¥ng kß║╗ ngang
+\renewcommand{\headrulewidth}{0.4pt}   % KH├öNG c├│ ─æ╞░ß╗¥ng kß║╗ ß╗ƒ header
+\renewcommand{\footrulewidth}{0.4pt} % ─Éß╗Ö d├áy ─æ╞░ß╗¥ng kß║╗ cß╗ºa footer
+% --- Kß║╛T TH├ÜC C├ÇI ─Éß║╢T FOOTER ---

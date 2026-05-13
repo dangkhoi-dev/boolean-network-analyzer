@@ -24,18 +24,18 @@
 \usetikzlibrary{shapes.geometric, arrows, positioning, fit, backgrounds, calc}
 
 %======================================================================
-%  CẤU HÌNH TIÊU ĐỀ - DỰA THEO TEMPLATE hcmut-report.cls
+%  TITLE METADATA - FOLLOWS hcmut-report.cls TEMPLATE
 %======================================================================
-\coursename{Programming Integration Project (Học kỳ 252)}
-\title{Boolean Network Analyzer -- Phân tích, mô phỏng và trực quan hoá mạng Boolean}
-\advisor{&Trịnh Văn Giang&}
+\coursename{Programming Integration Project (Semester 252)}
+\title{Boolean Network Analyzer -- Parsing, Simulation and Visualisation of Boolean Networks}
+\advisor{&Trinh Van Giang&}
 \stuname{%
-& Trần Phan Đăng Khôi & 2352626 \\
+& Tran Phan Dang Khoi & 2352626 \\
 }
-\date{Tháng 05, 2026}
+\date{May, 2026}
 
 %======================================================================
-%  CẤU HÌNH MÀU SẮC & STYLE
+%  COLOUR \& STYLE CONFIGURATION
 %======================================================================
 \definecolor{bkblue}{HTML}{003366}
 \definecolor{bkgreen}{HTML}{2E7D32}
@@ -87,41 +87,41 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
-% Đánh số trang chuẩn: Roman cho phần đầu, Arabic cho nội dung
+% Standard page numbering: Roman for front matter, Arabic for body
 \pagenumbering{roman}
 
 %----------------------------------------------------------------------
-%  TÓM TẮT (ABSTRACT)
+%  ABSTRACT
 %----------------------------------------------------------------------
 \cleardoublepage
 \phantomsection
-\addcontentsline{toc}{section}{Tóm tắt}
-\section*{Tóm tắt}
+\addcontentsline{toc}{section}{Abstract}
+\section*{Abstract}
 
-\noindent\textbf{Đề tài (Chủ đề 6):} \textsc{Boolean Network Analyzer} -- một phần mềm phân tích, mô phỏng và trực quan hoá Mạng Boolean.
+\noindent\textbf{Project (Topic 6):} \textsc{Boolean Network Analyzer} -- a software tool for parsing, simulating and visualising Boolean Networks.
 
 \vspace{0.4em}
 
-Mạng Boolean (Boolean Network -- BN) là một mô hình toán học rời rạc được Stuart Kauffman đề xuất năm 1969 nhằm mô phỏng các \textit{mạng điều hoà gene} (gene regulatory network). Mỗi node trong mạng nhận một trong hai giá trị $\{0, 1\}$ và được cập nhật theo một hàm Boolean phụ thuộc vào trạng thái của các node lân cận. Bất chấp sự đơn giản về biểu diễn, BN đủ mạnh để mô tả \textit{các trạng thái ổn định} (steady states), \textit{các vòng dao động} (cyclic attractor) và \textit{các hành vi phức tạp} (complex attractor) của những hệ thống sinh học và logic công nghiệp thực tế. Trên thực tế, các bộ công cụ chuẩn quốc tế như \textsc{GINsim}, \textsc{PyBoolNet}, \textsc{BoolNet} (R), \textsc{CellNetAnalyzer} đã trở thành chuẩn de facto cho nghiên cứu dynamics của BN.
+A Boolean Network (BN) is a discrete mathematical model originally proposed by Stuart Kauffman in 1969 to study \textit{gene regulatory networks}. Each node in the network carries one of two values $\{0, 1\}$ and is updated by a Boolean function of its neighbours' states. In spite of its very simple representation, a Boolean Network is expressive enough to describe \textit{steady states}, \textit{cyclic oscillations} and \textit{complex} behaviours of real biological and industrial logic systems. Tools such as \textsc{GINsim}, \textsc{PyBoolNet}, \textsc{BoolNet} (R) and \textsc{CellNetAnalyzer} have become de facto international standards for BN dynamics research.
 
 \vspace{0.3em}
 
-Báo cáo này trình bày quá trình \textit{khảo sát lý thuyết, thiết kế kiến trúc, hiện thực và đánh giá} một phần mềm \textsc{Boolean Network Analyzer} hoàn chỉnh dưới dạng ứng dụng web tương tác. Phần mềm hỗ trợ năm khối chức năng bắt buộc: (i) \textbf{Parser} đọc file \texttt{.bnet} chuẩn (tương thích PyBoolNet) gồm các luật cập nhật dạng \texttt{target, expression}; (ii) \textbf{Influence Graph Builder} dựng đồ thị ảnh hưởng có dấu (+/-/?), với việc suy luận dấu dựa trên kiểm tra tính đơn điệu (monotonicity) của hàm Boolean; (iii) \textbf{State Transition Graph (STG) Engine} duyệt toàn bộ $2^n$ trạng thái dưới hai sơ đồ cập nhật \textit{Synchronous} và \textit{Asynchronous}; (iv) \textbf{Attractor Finder} áp dụng phân rã thành phần liên thông mạnh (SCC -- Tarjan) trên đồ thị condensation để xác định mọi attractor và phân loại thành \textit{fixed-point/ cyclic /complex}; (v) \textbf{Visualizer} hiển thị tương tác mọi đồ thị trên giao diện Web (Landing Page), có khả năng export PNG cho báo cáo.
+This report documents the \textit{theoretical study, architectural design, implementation and evaluation} of a complete \textsc{Boolean Network Analyzer} delivered as a zero-install, in-browser web application hosted on GitHub Pages\footnote{Source: \url{https://github.com/dangkhoi-dev/boolean-network-analyzer}. Live demo: \url{https://dangkhoi-dev.github.io/boolean-network-analyzer/}}. The software supports five mandatory feature blocks: (i) a \textbf{Parser} that reads the standard \texttt{.bnet} format (compatible with PyBoolNet) consisting of update rules of the form \texttt{target, expression}; (ii) an \textbf{Influence Graph Builder} that constructs the signed influence graph (+/--/?), with the sign inferred from a monotonicity test on the Boolean function; (iii) a \textbf{State Transition Graph (STG) Engine} that enumerates the entire $2^n$ state space under the two canonical update schemes -- \textit{synchronous} and \textit{asynchronous}; (iv) an \textbf{Attractor Finder} that applies strongly connected component (SCC) decomposition (Tarjan) on the condensation graph to identify every attractor and classify it as \textit{fixed-point}, \textit{cyclic} or \textit{complex}; (v) a \textbf{Visualiser} that produces interactive renderings of all graphs in the browser (using \texttt{vis-network}), with PNG export for reporting. The same algorithms are also exposed as a Python reference implementation used by the automated test suite.
 
 \vspace{0.3em}
 
-Bốn đóng góp chính của đề tài: \textbf{(1) Kiến trúc module rõ ràng} (Parser $\rightarrow$ Network $\rightarrow$ STG $\rightarrow$ Attractors $\rightarrow$ Visualizer) tách biệt I/O và logic; \textbf{(2) Bộ kiểm thử tự động (pytest)} bao phủ Parser, Network, STG, Attractors và các sample chuẩn; \textbf{(3) Đối chiếu kết quả với công cụ chuẩn PyBoolNet} trên năm mạng mẫu (\textit{toy switch}, \textit{bistable toggle}, \textit{repressilator}, \textit{fission yeast}, \textit{mammalian cell cycle}) -- kết quả tính toán attractor trùng khớp 100\%; \textbf{(4) Giao diện Landing Page thân thiện} cho người dùng không lập trình, tích hợp upload file, lựa chọn sample, chuyển đổi sơ đồ cập nhật, mô phỏng quỹ đạo và tải về hình.
+The project offers four main contributions: \textbf{(1) A clean modular architecture} (Parser $\rightarrow$ Network $\rightarrow$ STG $\rightarrow$ Attractors $\rightarrow$ Visualizer) that separates I/O from algorithmic logic, implemented twice in parallel (Python reference + vanilla-JavaScript in-browser engine) and cross-validated against each other; \textbf{(2) An automated test suite (pytest)} covering parser, network evaluation, STG, attractors and bundled samples; \textbf{(3) Cross-validation against the reference tool PyBoolNet} on five sample networks (\textit{toy switch}, \textit{bistable toggle}, \textit{repressilator}, \textit{fission yeast}, \textit{mammalian cell cycle}) -- the attractor results match 100\%; \textbf{(4) A friendly zero-install web frontend} for non-programmers: a single static HTML/JS page deployed via GitHub Pages, integrating file upload, sample selection, scheme switching, trajectory simulation and figure download with no backend or installation required.
 
 \vspace{0.3em}
 
-Hệ thống đã được kiểm thử với năm mạng từ 2 đến 10 nodes; cả năm trường hợp đều cho kết quả attractor đúng theo tài liệu gốc (Davidich \& Bornholdt 2008, Faure \emph{et al.} 2006, Gardner \emph{et al.} 2000). Đánh giá hiệu năng cho thấy phần mềm chạy mượt với mạng $\leq 16$ nodes (tương ứng $2^{16}=65\,536$ trạng thái); vượt ngưỡng này, thời gian sinh STG đầy đủ tăng theo cấp số mũ và buộc người dùng chuyển sang chế độ \textit{reachable-only} (chỉ duyệt các trạng thái đạt tới được từ trạng thái khởi đầu). Toàn bộ source code, dataset mẫu và tài liệu được tổ chức theo chuẩn project layout chuyên nghiệp (\texttt{src/}, \texttt{tests/}, \texttt{samples/}, \texttt{docs/}) và công khai trên repository GitHub tại: \url{https://github.com/dangkhoi-dev/boolean-network-analyzer}.
+The software has been tested with five networks ranging from 2 to 10 nodes. In every case the attractor results agree with the original publications (Davidich \& Bornholdt 2008, Faure \emph{et al.} 2006, Gardner \emph{et al.} 2000). Performance evaluation shows that the software is responsive for networks with $\leq 16$ nodes (i.e.\ up to $2^{16}=65\,536$ states); beyond that threshold the cost of generating the full STG grows exponentially and the user is encouraged to switch to \textit{reachable-only} mode (BFS from a chosen initial state). All source code, sample dataset and documentation are organised according to a professional project layout (\texttt{src/}, \texttt{tests/}, \texttt{samples/}, \texttt{docs/}) and released on a public GitHub repository.
 
 \vspace{0.3em}
 
-\noindent\textbf{Từ khoá:} Boolean Network, Influence Graph, State Transition Graph, Attractor, Synchronous Update, Asynchronous Update, Strongly Connected Component, PyBoolNet, Web UI, Landing Page, Bioinformatics.
+\noindent\textbf{Keywords:} Boolean Network, Influence Graph, State Transition Graph, Attractor, Synchronous Update, Asynchronous Update, Strongly Connected Component, PyBoolNet, GitHub Pages, vis-network, Bioinformatics.
 
 %----------------------------------------------------------------------
-%  MỤC LỤC, MỤC LỤC HÌNH, MỤC LỤC BẢNG
+%  TABLE OF CONTENTS, LIST OF FIGURES, LIST OF TABLES
 %----------------------------------------------------------------------
 \begingroup
   \setstretch{0.95}
@@ -131,12 +131,12 @@ Hệ thống đã được kiểm thử với năm mạng từ 2 đến 10 nodes
 
   \cleardoublepage
   \phantomsection
-  \addcontentsline{toc}{section}{Danh sách hình vẽ}
+  \addcontentsline{toc}{section}{List of Figures}
   \listoffigures
 
   \cleardoublepage
   \phantomsection
-  \addcontentsline{toc}{section}{Danh sách bảng}
+  \addcontentsline{toc}{section}{List of Tables}
   \listoftables
 \endgroup
 
@@ -146,116 +146,116 @@ Hệ thống đã được kiểm thử với năm mạng từ 2 đến 10 nodes
 \setcounter{page}{1}
 
 %======================================================================
-\section{Giới thiệu}\label{sec:intro}
+\section{Introduction}\label{sec:intro}
 %======================================================================
 
-\subsection{Bối cảnh}\label{subsec:boicanh}
+\subsection{Background}\label{subsec:background}
 
-\subsubsection{Mạng Boolean trong khoa học hệ thống}
-Mạng Boolean (Boolean Network -- BN) là một loại mô hình toán học rời rạc dùng để mô tả \textit{động học} (dynamics) của các hệ thống mà mỗi thành phần chỉ có thể ở một trong hai trạng thái rời rạc: \textit{bật} (1, \texttt{True}, ON, active) hoặc \textit{tắt} (0, \texttt{False}, OFF, inactive). Mô hình này được Stuart A. Kauffman đề xuất lần đầu vào năm 1969 \cite{kauffman1969metabolic} trong bối cảnh nghiên cứu \textit{mạng điều hoà gene} (gene regulatory network -- GRN). Ý tưởng cốt lõi là: thay vì mô hình hoá chính xác nồng độ hay tốc độ phản ứng bằng các hệ phương trình vi phân thường (ODE) -- vốn đòi hỏi nhiều tham số khó đo đạc -- ta \textit{trừu tượng hoá} mỗi gene thành một biến nhị phân và mỗi quan hệ điều hoà thành một biểu thức logic.
+\subsubsection{Boolean Networks in systems science}
+A Boolean Network (BN) is a class of discrete mathematical model used to describe the \textit{dynamics} of systems in which every component takes only one of two discrete values: \textit{on} (1, \texttt{True}, active) or \textit{off} (0, \texttt{False}, inactive). The model was introduced by Stuart A.\ Kauffman in 1969 \cite{kauffman1969metabolic} in the context of \textit{gene regulatory networks} (GRN). The core idea is the following: rather than modelling concentrations or reaction rates accurately by a system of ordinary differential equations (ODEs) -- which requires many hard-to-measure parameters -- each gene is \textit{abstracted} into a binary variable, and every regulatory relation is captured by a logical expression.
 
-Bất chấp sự đơn giản về biểu diễn, BN đã chứng tỏ là một công cụ mạnh, có khả năng tái hiện nhiều hiện tượng định tính quan trọng quan sát được trong sinh học và kỹ thuật như: tồn tại nhiều \textit{trạng thái ổn định} (multistability) tương ứng với các kiểu hình tế bào khác nhau, \textit{dao động tuần hoàn} (oscillation) trong chu kỳ tế bào, \textit{tính chống nhiễu} (robustness) trước nhiễu ngẫu nhiên, và sự tồn tại của các \textit{vùng hút phức tạp} (complex attractor) trong các mạng cập nhật bất đồng bộ.
+In spite of its very simple representation, Boolean Networks have proven to be a powerful tool capable of reproducing many qualitative phenomena observed in biology and engineering, including: the coexistence of multiple \textit{stable steady states} (multistability) that correspond to different cell phenotypes, \textit{periodic oscillations} in the cell cycle, \textit{robustness} against stochastic perturbations, and the existence of \textit{complex attractors} in asynchronously updated networks.
 
-\subsubsection{Ứng dụng của Boolean Network}
-Hiện nay, BN không chỉ được dùng trong sinh học hệ thống mà còn được áp dụng cho nhiều lĩnh vực khác:
+\subsubsection{Applications of Boolean Networks}
+Today BNs are used not only in systems biology but in many other domains:
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Sinh học phân tử và y sinh}: Mô hình hoá chu kỳ tế bào (\textit{S. pombe}, \textit{S. cerevisiae}, mammalian cell cycle), mạng tín hiệu của tế bào (TGF-$\beta$, MAPK, T-cell receptor), mô phỏng tiến trình apoptosis và sự lây nhiễm virus \cite{faure2006,davidich2008,schwab2020}.
-    \item \textbf{Thiết kế mạch logic số}: Mỗi cổng logic được trừu tượng hoá thành một node BN; phân tích STG cho phép tìm racing condition và glitch trong mạch tổ hợp/tuần tự.
-    \item \textbf{Hệ điều khiển công nghiệp PLC}: Các quan hệ logic giữa cảm biến/cơ cấu chấp hành có thể mô hình hoá bằng BN, từ đó kiểm chứng formal cho safety property.
-    \item \textbf{Khoa học xã hội tính toán}: BN được dùng để mô phỏng \textit{lan truyền ý kiến} (opinion dynamics) trên mạng xã hội, mỗi cá nhân có quan điểm 0/1 phụ thuộc vào láng giềng.
+    \item \textbf{Molecular and medical biology}: Modelling cell cycles (\textit{S.\ pombe}, \textit{S.\ cerevisiae}, mammalian cell cycle), signalling networks (TGF-$\beta$, MAPK, T-cell receptor), apoptosis and viral infection dynamics \cite{faure2006,davidich2008,schwab2020}.
+    \item \textbf{Digital logic circuit design}: Each gate is abstracted into a BN node; analysing the STG allows the detection of race conditions and glitches in combinational/sequential circuits.
+    \item \textbf{Industrial PLC control systems}: Logical relations between sensors and actuators can be cast as a BN, enabling formal verification of safety properties.
+    \item \textbf{Computational social science}: BNs are used to simulate \textit{opinion dynamics} on social networks, where each individual carries a 0/1 view that depends on their neighbours.
 \end{itemize}
 
-\subsubsection{Khoảng trống công cụ và động lực}
-Mặc dù đã có các bộ công cụ chuyên nghiệp như \textsc{GINsim} \cite{naldi2009}, \textsc{PyBoolNet} \cite{klarner2017pyboolnet}, \textsc{BoolNet} (R) và \textsc{CellNetAnalyzer}, các công cụ này thường có \textit{rào cản tiếp cận cao} với người học mới: GINsim đòi hỏi cài đặt JVM và GUI khá phức tạp; PyBoolNet là thư viện Python thuần, không có giao diện trực quan; BoolNet yêu cầu môi trường R. Đối với sinh viên năm nhất/năm hai tiếp cận môn \textit{Programming Integration Project}, việc có một \textit{ứng dụng web nhẹ, đa nền tảng}, cho phép tải file \texttt{.bnet} lên và ngay lập tức nhìn thấy đồ thị ảnh hưởng cùng các attractor là rất hữu ích cho cả việc học và việc trình bày kết quả.
+\subsubsection{Tooling gap and motivation}
+Although professional tools such as \textsc{GINsim} \cite{naldi2009}, \textsc{PyBoolNet} \cite{klarner2017pyboolnet}, \textsc{BoolNet} (R) and \textsc{CellNetAnalyzer} are mature, they tend to have a \textit{high barrier of entry} for newcomers: GINsim requires a Java runtime and a fairly heavy Swing GUI; PyBoolNet is a pure-Python library without a visual frontend; BoolNet requires an R environment. For first/second-year students approaching the \textit{Programming Integration Project} module, having a \textit{lightweight, cross-platform web application} that allows uploading a \texttt{.bnet} file and immediately seeing the influence graph together with the attractors is highly valuable both for learning and for presenting results.
 
-Đó chính là động lực để chúng em xây dựng \textsc{Boolean Network Analyzer} -- một phần mềm đầy đủ chức năng phân tích cơ bản của BN, giao diện web tương tác (Landing Page), mã nguồn mở Python và tổ chức theo chuẩn project chuyên nghiệp để có thể tái sử dụng cho các đồ án sau này.
+This is exactly the motivation behind our \textsc{Boolean Network Analyzer} -- a software with all the basic BN analysis features, accessible from \textit{any modern browser with zero installation} (the entire engine, including the SCC-based attractor finder, runs client-side in JavaScript), with the Python reference engine kept as a parallel implementation for testing and batch jobs, and the whole project organised in a professional layout that can be reused for future student projects. The live demo is hosted at \url{https://dangkhoi-dev.github.io/boolean-network-analyzer/} and the source code at \url{https://github.com/dangkhoi-dev/boolean-network-analyzer}.
 
-\subsection{Mục tiêu dự án}\label{subsec:muctieu}
+\subsection{Project objectives}\label{subsec:objectives}
 
-Đề tài \textbf{Boolean Network Analyzer} hướng tới việc xây dựng một phần mềm có khả năng:
+The \textbf{Boolean Network Analyzer} project aims at building a software tool that can:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Đọc và phân tích cú pháp} file \texttt{.bnet} chuẩn (tương thích PyBoolNet/BoolNet) gồm các luật cập nhật dạng \texttt{target, expression} với các toán tử logic \texttt{!}, \texttt{\&}, \texttt{|} và dấu ngoặc.
-    \item \textbf{Xây dựng đồ thị ảnh hưởng} (Influence Graph) có dấu (+ activation / -- inhibition / ? non-monotonic) bằng cách suy luận trực tiếp từ luật cập nhật.
-    \item \textbf{Dựng đồ thị chuyển trạng thái} (State Transition Graph -- STG) đầy đủ trên toàn bộ $2^n$ trạng thái dưới \textit{hai} sơ đồ cập nhật chuẩn: \textbf{synchronous} và \textbf{asynchronous}.
-    \item \textbf{Tìm attractor} (terminal SCC) bằng thuật toán SCC chuẩn (Tarjan/Kosaraju), phân loại thành \textit{fixed-point}, \textit{cyclic} hoặc \textit{complex}, và tính \textit{vùng hút (basin of attraction)} của mỗi attractor.
-    \item \textbf{Trực quan hoá} mọi đồ thị (Influence Graph, STG) với layout tự động, đánh dấu attractor bằng màu, hỗ trợ export PNG.
-    \item \textbf{Mô phỏng quỹ đạo} (trajectory simulation) từ trạng thái khởi đầu bất kỳ do người dùng chọn, hỗ trợ cả sync lẫn async.
-    \item \textbf{Cung cấp bộ sample} có sẵn (5 mạng từ kinh điển đến phức tạp) cho phép kiểm thử nhanh.
+    \item \textbf{Parse} a standard \texttt{.bnet} file (compatible with PyBoolNet/BoolNet) consisting of update rules \texttt{target, expression} written with operators \texttt{!}, \texttt{\&}, \texttt{|} and parentheses.
+    \item \textbf{Build the influence graph} (Influence Graph) with signs (+ activation/-- inhibition/? non-monotonic) inferred directly from the update rule.
+    \item \textbf{Construct the state transition graph} (STG) over the entire $2^n$ state space under \textit{two} canonical update schemes: \textbf{synchronous} and \textbf{asynchronous}.
+    \item \textbf{Find every attractor} (terminal SCC) using a standard SCC algorithm (Tarjan/Kosaraju), classify it as \textit{fixed-point}, \textit{cyclic} or \textit{complex}, and compute the \textit{basin of attraction} of each attractor.
+    \item \textbf{Visualise} all graphs (influence graph, STG) with automatic layout, attractor highlighting, and PNG export.
+    \item \textbf{Simulate trajectories} from any user-chosen initial state, supporting both synchronous and asynchronous semantics.
+    \item \textbf{Ship a bundled sample set} (five networks ranging from classical to complex) for quick experimentation.
 \end{enumerate}
 
-\subsection{Phạm vi đề tài}\label{subsec:phamvi}
+\subsection{Project scope}\label{subsec:scope}
 
-Đề tài tập trung vào phần \textit{phân tích định tính} của BN -- cụ thể là cấu trúc topological (influence graph) và động học rời rạc (STG, attractor). Phạm vi cụ thể được tóm tắt trong Bảng~\ref{tab:scope}.
+The project focuses on the \textit{qualitative analysis} of a BN -- specifically the topological structure (influence graph) and discrete dynamics (STG, attractors). The detailed scope is summarised in Table~\ref{tab:scope}.
 
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.4}
     \begin{tabular}{|p{0.30\textwidth}|p{0.62\textwidth}|}
         \hline
-        \rowcolor{bklight}\textbf{Thành phần} & \textbf{Phạm vi triển khai} \\
+        \rowcolor{bklight}\textbf{Component} & \textbf{Scope of implementation} \\
         \hline
-        \textbf{Parser .bnet} & Tương thích cú pháp PyBoolNet/BoolNet; hỗ trợ toán tử \texttt{!,\&,|,()}; chấp nhận hằng \texttt{0,1,True,False}; bỏ qua header \texttt{targets, factors} và comment \texttt{\#}. \\
+        \textbf{.bnet parser} & Compatible with the PyBoolNet/BoolNet syntax; supports operators \texttt{!,\&,|,()}; accepts constants \texttt{0,1,True,False}; ignores the optional header \texttt{targets, factors} and \texttt{\#} comments. \\
         \hline
-        \textbf{Network Engine} & Lớp \texttt{BooleanNetwork} với evaluation toàn bộ rule; tính influence graph có dấu; chuyển đổi giữa state-tuple, dict, binary-string. \\
+        \textbf{Network engine} & \texttt{BooleanNetwork} class providing evaluation of all rules; signed influence graph; conversions between state-tuple, dict and binary string. \\
         \hline
-        \textbf{STG Builder} & Hỗ trợ \textit{full state space} ($2^n$ states) và \textit{reachable-only} (BFS từ trạng thái khởi đầu); hai sơ đồ sync \& async. \\
+        \textbf{STG builder} & Supports both \textit{full state space} ($2^n$ states) and \textit{reachable-only} mode (BFS from a chosen initial state); both sync and async schemes. \\
         \hline
-        \textbf{Attractor Finder} & SCC decomposition (Tarjan via NetworkX); classification fixed-point / cyclic / complex; tính weak basin. \\
+        \textbf{Attractor finder} & SCC decomposition (Tarjan via NetworkX); classification fixed-point/cyclic/complex; weak-basin computation. \\
         \hline
-        \textbf{Visualizer} & Render influence graph bằng \texttt{matplotlib}; STG có hilight attractor; export PNG độ phân giải 160--180 dpi. \\
+        \textbf{Visualiser} & Influence graph rendered with \texttt{matplotlib}; STG with highlighted attractors; PNG export at 160--180 dpi. \\
         \hline
-        \textbf{Web UI} & Web SPA (Landing Page) trực quan: tích hợp các phân hệ hiển thị Influence Graph, STG, Attractors và Simulate. \\
+        \textbf{Web UI} & A single static HTML page (\texttt{docs/app.html}) using vanilla JavaScript and \texttt{vis-network} for rendering; deployed via GitHub Pages with five tabs: Influence, STG, Attractors, Simulate, Rules. \\
         \hline
-        \textbf{Test \& Validation} & 4 file \texttt{pytest}: parser, network, stg+attractors, samples. Đối chiếu thủ công với PyBoolNet. \\
+        \textbf{Test \& validation} & Four \texttt{pytest} files: parser, network, stg+attractors, samples. Manual cross-check against PyBoolNet. \\
         \hline
     \end{tabular}
-    \caption{Phạm vi triển khai của đề tài Boolean Network Analyzer}
+    \caption{Scope of implementation for the Boolean Network Analyzer project}
     \label{tab:scope}
 \end{table}
 
-\subsection{Đóng góp chính}\label{subsec:donggop}
+\subsection{Main contributions}\label{subsec:contributions}
 
-Sau khi hoàn thành, phần mềm cung cấp các đóng góp:
+Once finished, the software provides the following contributions:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Bộ phân tích Boolean Network mã nguồn mở}: Cài đặt lại các thuật toán nền (parser, evaluation, STG, SCC) bằng Python thuần, có thể đọc hiểu, sửa đổi và mở rộng dễ dàng.
-    \item \textbf{Giao diện Landing Page tương tác}: Người dùng không cần biết lập trình vẫn có thể upload file \texttt{.bnet}, nhìn thấy ngay đồ thị và attractor.
-    \item \textbf{Đối chiếu với công cụ chuẩn PyBoolNet}: Kết quả attractor trên 5 mạng mẫu khớp 100\% với PyBoolNet -- chứng minh tính đúng đắn của hiện thực.
-    \item \textbf{Bộ kiểm thử tự động}: 30+ test case \texttt{pytest} bao phủ parser, network evaluation, STG construction, attractor classification và smoke test trên các sample.
-    \item \textbf{Tổ chức project chuyên nghiệp}: Tách \texttt{src/}, \texttt{tests/}, \texttt{samples/}, \texttt{docs/}; có \texttt{requirements.txt}, \texttt{README.md}, \texttt{LICENSE}; tương thích CI/CD GitHub Actions. Mã nguồn mở tại: \url{https://github.com/dangkhoi-dev/boolean-network-analyzer}.
+    \item \textbf{An open-source Boolean Network analyzer}: A from-scratch implementation of the core algorithms (parser, evaluation, STG construction, SCC decomposition) in plain Python; easy to read, modify and extend.
+    \item \textbf{A zero-install interactive web interface}: a single static HTML page (vanilla JavaScript + \texttt{vis-network}) deployed via GitHub Pages. Non-programmers can open the live demo URL, upload a \texttt{.bnet} file and immediately see the graphs and attractors -- no Python, no backend, no installation.
+    \item \textbf{Cross-validation against the reference tool PyBoolNet}: Attractor results on the five sample networks match 100\% with PyBoolNet -- evidence that the implementation is correct.
+    \item \textbf{Automated test suite}: 30+ \texttt{pytest} cases covering parser, network evaluation, STG construction, attractor classification and smoke tests on the bundled samples.
+    \item \textbf{Professional project organisation}: A clean \texttt{src/} layout with \texttt{tests/}, \texttt{samples/} and \texttt{docs/} directories; a top-level \texttt{requirements.txt}, \texttt{README.md} and \texttt{LICENSE}; GitHub Actions CI configuration.
 \end{enumerate}
 
-\subsection{Cấu trúc báo cáo}\label{subsec:cautruc}
+\subsection{Report structure}\label{subsec:report-structure}
 
-Phần còn lại của báo cáo được tổ chức như sau. Mục~\ref{sec:theory} trình bày \textit{cơ sở lý thuyết} về BN bao gồm định nghĩa toán học, influence graph, hai sơ đồ cập nhật và khái niệm attractor. Mục~\ref{sec:method} mô tả \textit{kiến trúc tổng thể và thuật toán cốt lõi} của phần mềm. Mục~\ref{sec:experiment} trình bày \textit{kết quả thực nghiệm và đánh giá đối chiếu} với PyBoolNet trên 5 mạng mẫu. Mục~\ref{sec:conclusion} \textit{kết luận} và đề xuất \textit{hướng phát triển} trong tương lai. Tài liệu tham khảo được liệt kê đầy đủ ở cuối báo cáo.
+The remainder of this report is organised as follows. Section~\ref{sec:theory} presents the \textit{theoretical background} of Boolean Networks, including the mathematical definition, the influence graph, the two update schemes and the notion of attractor. Section~\ref{sec:method} describes the \textit{architecture and core algorithms} of the software. Section~\ref{sec:experiment} reports the \textit{experimental results and cross-validation} against PyBoolNet on the five sample networks. Section~\ref{sec:conclusion} \textit{concludes} the work and discusses possible future directions. A complete list of references is given at the end of the document.
 
 %======================================================================
-\section{Cơ sở lý thuyết}\label{sec:theory}
+\section{Theoretical Background}\label{sec:theory}
 %======================================================================
 
-Mục này trình bày các khái niệm toán học làm nền tảng cho phần mềm Boolean Network Analyzer. Trình bày dựa trên hai nguồn chính: bài tổng quan của Schwab \emph{et al.} \cite{schwab2020} và tài liệu của Naldi \emph{et al.} \cite{naldi2009}. Các định nghĩa được tự diễn đạt lại bằng tiếng Việt kèm ví dụ minh hoạ tự thiết kế nhằm thể hiện sự hiểu rõ bản chất chứ không sao chép máy móc.
+This section presents the mathematical concepts that underpin the Boolean Network Analyzer software. The exposition follows two primary sources: the survey paper by Schwab \emph{et al.} \cite{schwab2020} and the technical paper by Naldi \emph{et al.} \cite{naldi2009}. The definitions are reformulated in our own words with self-designed illustrative examples, in order to show genuine understanding rather than mechanical copying.
 
-\subsection{Định nghĩa toán học của Boolean Network}\label{subsec:def-bn}
+\subsection{Mathematical definition of a Boolean Network}\label{subsec:def-bn}
 
-\subsubsection{Định nghĩa hình thức}
+\subsubsection{Formal definition}
 
 \begin{quote}
-\textit{Một Boolean Network với $n$ node là một bộ ba}
+\textit{A Boolean Network on $n$ nodes is a triple}
 $$\mathcal{B} = (V, \mathcal{F}, \mathcal{X})$$
-\textit{trong đó:}
+\textit{where:}
 \begin{itemize}[leftmargin=*]
-    \item $V = \{v_1, v_2, \ldots, v_n\}$ là tập $n$ \textit{node} (gene, biến, thành phần).
-    \item $\mathcal{X} = \{0, 1\}^n$ là \textit{không gian trạng thái} chứa $2^n$ trạng thái. Một trạng thái cụ thể $x = (x_1, x_2, \ldots, x_n) \in \mathcal{X}$ gán cho mỗi node một giá trị Boolean.
-    \item $\mathcal{F} = \{f_1, f_2, \ldots, f_n\}$ là tập \textit{hàm cập nhật} (update functions), trong đó $f_i : \{0,1\}^n \to \{0,1\}$ xác định giá trị tiếp theo của node $v_i$ dựa trên trạng thái hiện tại.
+    \item $V = \{v_1, v_2, \ldots, v_n\}$ is the set of $n$ \textit{nodes} (genes, variables, components).
+    \item $\mathcal{X} = \{0, 1\}^n$ is the \textit{state space} of size $2^n$. A specific state $x = (x_1, x_2, \ldots, x_n) \in \mathcal{X}$ assigns a Boolean value to every node.
+    \item $\mathcal{F} = \{f_1, f_2, \ldots, f_n\}$ is the set of \textit{update functions}, where $f_i : \{0,1\}^n \to \{0,1\}$ determines the next value of node $v_i$ based on the current state.
 \end{itemize}
 \end{quote}
 
-Trong thực tế, $f_i$ thường chỉ phụ thuộc vào một \textit{tập con} các node $\mathrm{In}(v_i) \subseteq V$ -- gọi là \textit{regulator set} (tập điều hoà) của $v_i$. Số phần tử $|\mathrm{In}(v_i)|$ là \textit{in-degree} của $v_i$ trong influence graph (xem \S\ref{subsec:influence-graph}).
+In practice, $f_i$ usually depends only on a \textit{subset} of nodes $\mathrm{In}(v_i) \subseteq V$ -- the so-called \textit{regulator set} of $v_i$. The cardinality $|\mathrm{In}(v_i)|$ equals the \textit{in-degree} of $v_i$ in the influence graph (see \S\ref{subsec:influence-graph}).
 
-\subsubsection{Biểu diễn rule trong định dạng \texttt{.bnet}}
+\subsubsection{The \texttt{.bnet} rule format}
 
-Định dạng \texttt{.bnet} (chuẩn của BoolNet R-package và PyBoolNet) biểu diễn mỗi rule trên một dòng riêng theo cú pháp:
-\begin{lstlisting}[style=bnetStyle, caption={Cú pháp file \texttt{.bnet}}, label={lst:bnet-syntax}]
+The \texttt{.bnet} format (used by BoolNet for R and by PyBoolNet) represents each rule on its own line according to the syntax:
+\begin{lstlisting}[style=bnetStyle, caption={\texttt{.bnet} file syntax}, label={lst:bnet-syntax}]
 # Comments start with '#' and run to end of line.
 # Header (optional, ignored by the parser):
 targets, factors
@@ -265,135 +265,135 @@ B, A & !C
 C, B | !A
 \end{lstlisting}
 
-Các toán tử logic được hỗ trợ là \texttt{!} (NOT), \texttt{\&} (AND), \texttt{|} (OR) và dấu ngoặc đơn. Các hằng \texttt{0, 1, True, False} cũng được nhận diện. Ưu tiên toán tử tuân theo chuẩn Python: NOT > AND > OR.
+The supported logical operators are \texttt{!} (NOT), \texttt{\&} (AND), \texttt{|} (OR) and parentheses. The constants \texttt{0, 1, True, False} are also recognised. Operator precedence follows the Python convention: NOT > AND > OR.
 
-\subsubsection{Ví dụ minh hoạ: mạng \textit{toy switch} 3 node}
+\subsubsection{Illustrative example: a 3-node \textit{toy switch}}
 
-Để minh hoạ, xét mạng 3 node \textit{toy switch} trong Listing~\ref{lst:bnet-toy}:
+To make the discussion concrete, consider the 3-node \textit{toy switch} of Listing~\ref{lst:bnet-toy}:
 
-\begin{lstlisting}[style=bnetStyle, caption={Mạng \textit{toy switch} 3 node}, label={lst:bnet-toy}]
+\begin{lstlisting}[style=bnetStyle, caption={The 3-node \textit{toy switch} network}, label={lst:bnet-toy}]
 targets, factors
 A, !B
 B, A & !C
 C, B
 \end{lstlisting}
 
-Mỗi node có một rule:
+Each node carries one rule:
 \begin{align*}
 f_A(x_A, x_B, x_C) &= \lnot x_B \\
 f_B(x_A, x_B, x_C) &= x_A \land \lnot x_C \\
 f_C(x_A, x_B, x_C) &= x_B
 \end{align*}
 
-Không gian trạng thái có $2^3 = 8$ trạng thái, đánh số bằng chuỗi nhị phân \texttt{ABC}: \texttt{000, 001, 010, 011, 100, 101, 110, 111}. Ví dụ, từ trạng thái $x = (1, 0, 0)$ ($A=1, B=0, C=0$) ta tính:
+The state space has $2^3 = 8$ states, numbered with binary strings \texttt{ABC}: \texttt{000, 001, 010, 011, 100, 101, 110, 111}. For example, from state $x = (1, 0, 0)$ ($A=1, B=0, C=0$) we compute:
 \begin{align*}
 f_A &= \lnot 0 = 1 \\
 f_B &= 1 \land \lnot 0 = 1 \\
 f_C &= 0
 \end{align*}
-Nghĩa là trạng thái kế tiếp (theo sơ đồ \textit{synchronous}) là $(1, 1, 0)$. Lặp lại bước này cho toàn bộ 8 trạng thái sẽ thu được STG đầy đủ (xem \S\ref{subsec:stg}).
+Hence the next state (under the \textit{synchronous} scheme) is $(1, 1, 0)$. Repeating this for all eight states produces the complete STG (see \S\ref{subsec:stg}).
 
-\subsection{Đồ thị ảnh hưởng (Influence Graph)}\label{subsec:influence-graph}
+\subsection{The influence graph}\label{subsec:influence-graph}
 
-\subsubsection{Định nghĩa}
+\subsubsection{Definition}
 
 \begin{quote}
-\textit{Influence Graph} $G_I = (V, E_I, \sigma)$ \textit{của một Boolean Network} $\mathcal{B}$ \textit{là một đồ thị có hướng, có dấu, trong đó:}
+\textit{The Influence Graph} $G_I = (V, E_I, \sigma)$ \textit{of a Boolean Network} $\mathcal{B}$ \textit{is a directed, signed graph in which:}
 \begin{itemize}[leftmargin=*]
-    \item Tập đỉnh $V$ trùng với tập node của BN.
-    \item Tồn tại cạnh có hướng $(u, v) \in E_I$ khi và chỉ khi $u \in \mathrm{In}(v)$, tức $u$ xuất hiện trong rule của $v$.
-    \item $\sigma : E_I \to \{+, -, ?\}$ là hàm gán \textit{dấu} cho mỗi cạnh:
+    \item The vertex set $V$ coincides with the node set of the BN.
+    \item There is a directed edge $(u, v) \in E_I$ iff $u \in \mathrm{In}(v)$, that is, $u$ appears in the rule of $v$.
+    \item $\sigma : E_I \to \{+, -, ?\}$ assigns a \textit{sign} to each edge:
     \begin{itemize}
-        \item $\sigma(u,v) = +$ (activation) nếu việc bật $u$ \textit{luôn} làm tăng (hoặc giữ nguyên) giá trị $f_v$.
-        \item $\sigma(u,v) = -$ (inhibition) nếu việc bật $u$ \textit{luôn} làm giảm (hoặc giữ nguyên) giá trị $f_v$.
-        \item $\sigma(u,v) = ?$ (non-monotonic) nếu hành vi phụ thuộc vào trạng thái của các node khác.
+        \item $\sigma(u,v) = +$ (activation) if turning $u$ on \textit{always} increases (or leaves unchanged) the value of $f_v$.
+        \item $\sigma(u,v) = -$ (inhibition) if turning $u$ on \textit{always} decreases (or leaves unchanged) the value of $f_v$.
+        \item $\sigma(u,v) = ?$ (non-monotonic) if the behaviour depends on the values of the other regulators.
     \end{itemize}
 \end{itemize}
 \end{quote}
 
-\subsubsection{Suy luận dấu cạnh}
+\subsubsection{Inferring the edge sign}
 
-Cho rule $f_v$ và regulator $u \in \mathrm{In}(v)$. Đặt $\mathrm{In}(v) \setminus \{u\} = \{w_1, \ldots, w_k\}$. Với mỗi gán giá trị $(b_1, \ldots, b_k) \in \{0,1\}^k$ cho các regulator còn lại, ta so sánh:
+Let $f_v$ be a rule and $u \in \mathrm{In}(v)$ one of its regulators. Write $\mathrm{In}(v) \setminus \{u\} = \{w_1, \ldots, w_k\}$. For every assignment $(b_1, \ldots, b_k) \in \{0,1\}^k$ of the remaining regulators we compute:
 $$\Delta_u(b_1,\ldots,b_k) = f_v(u=1, b_1,\ldots,b_k) - f_v(u=0, b_1,\ldots,b_k) \in \{-1, 0, +1\}$$
 
-Có ba khả năng:
+Three cases arise:
 \begin{itemize}[leftmargin=*]
-    \item Nếu $\Delta_u \geq 0$ với mọi $(b_1,\ldots,b_k)$ và $\Delta_u > 0$ ít nhất một lần $\Rightarrow \sigma(u,v) = +$.
-    \item Nếu $\Delta_u \leq 0$ với mọi $(b_1,\ldots,b_k)$ và $\Delta_u < 0$ ít nhất một lần $\Rightarrow \sigma(u,v) = -$.
-    \item Nếu vừa có $\Delta_u > 0$ vừa có $\Delta_u < 0$ ở các gán khác nhau $\Rightarrow \sigma(u,v) = ?$.
+    \item If $\Delta_u \geq 0$ for every $(b_1,\ldots,b_k)$ and $\Delta_u > 0$ at least once $\Rightarrow \sigma(u,v) = +$.
+    \item If $\Delta_u \leq 0$ for every $(b_1,\ldots,b_k)$ and $\Delta_u < 0$ at least once $\Rightarrow \sigma(u,v) = -$.
+    \item If both $\Delta_u > 0$ and $\Delta_u < 0$ occur for different assignments $\Rightarrow \sigma(u,v) = ?$.
 \end{itemize}
 
-Thuật toán này có độ phức tạp $O(2^{k})$ với $k = |\mathrm{In}(v)| - 1$. Vì $k$ thường nhỏ ($\leq 5$ trong các mạng sinh học thực tế), việc suy luận dấu là rất nhanh.
+This algorithm has complexity $O(2^{k})$ with $k = |\mathrm{In}(v)| - 1$. Because $k$ is small in practice (typically $\leq 5$ for biological networks), the sign inference is very fast.
 
-\subsubsection{Ví dụ minh hoạ}
+\subsubsection{Worked example}
 
-Áp dụng cho mạng \textit{toy switch}:
+Applied to the \textit{toy switch}:
 \begin{itemize}[leftmargin=*]
-    \item Edge $B \to A$: $f_A = \lnot x_B$. Khi $B=0 \Rightarrow f_A = 1$; khi $B=1 \Rightarrow f_A = 0$. Bật $B$ luôn làm giảm $A$ $\Rightarrow$ dấu \textbf{$-$}.
-    \item Edge $A \to B$: $f_B = x_A \land \lnot x_C$. Khi $C=0$: $A=0 \Rightarrow f_B=0$; $A=1 \Rightarrow f_B=1$ (bật $A$ làm tăng). Khi $C=1$: $A=0 \Rightarrow f_B=0$; $A=1 \Rightarrow f_B=0$ (bật $A$ không đổi). Tức $A$ luôn $\geq$, và có ít nhất một trường hợp $>$ $\Rightarrow$ dấu \textbf{$+$}.
-    \item Edge $C \to B$: $f_B = x_A \land \lnot x_C$. Khi $A=1$: $C=0 \Rightarrow f_B=1$; $C=1 \Rightarrow f_B=0$ (bật $C$ làm giảm). Khi $A=0$: $f_B=0$ với mọi $C$ (không đổi). $\Rightarrow$ dấu \textbf{$-$}.
-    \item Edge $B \to C$: $f_C = x_B$, đơn điệu tăng $\Rightarrow$ dấu \textbf{$+$}.
+    \item Edge $B \to A$: $f_A = \lnot x_B$. When $B=0 \Rightarrow f_A = 1$; when $B=1 \Rightarrow f_A = 0$. Turning $B$ on always decreases $A$ $\Rightarrow$ sign \textbf{$-$}.
+    \item Edge $A \to B$: $f_B = x_A \land \lnot x_C$. When $C=0$: $A=0 \Rightarrow f_B=0$; $A=1 \Rightarrow f_B=1$ (turning $A$ on increases $f_B$). When $C=1$: $A=0 \Rightarrow f_B=0$; $A=1 \Rightarrow f_B=0$ (unchanged). So $A$ is always $\geq$, with at least one strict increase $\Rightarrow$ sign \textbf{$+$}.
+    \item Edge $C \to B$: $f_B = x_A \land \lnot x_C$. When $A=1$: $C=0 \Rightarrow f_B=1$; $C=1 \Rightarrow f_B=0$ (turning $C$ on decreases $f_B$). When $A=0$: $f_B=0$ for any $C$ (unchanged). $\Rightarrow$ sign \textbf{$-$}.
+    \item Edge $B \to C$: $f_C = x_B$, strictly increasing in $B$ $\Rightarrow$ sign \textbf{$+$}.
 \end{itemize}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.55\textwidth]{../docs/img/influence_toy.png}
-    \caption{Influence Graph của mạng \textit{toy switch} 3 node. Cạnh xanh: activation (+); cạnh đỏ: inhibition (--).}
+    \caption{Influence graph of the 3-node \textit{toy switch}. Green edges denote activation (+); red edges denote inhibition (--).}
     \label{fig:influence-toy}
 \end{figure}
 
-\subsubsection{Vai trò của Influence Graph}
+\subsubsection{Role of the influence graph}
 
-Influence Graph nắm bắt phần \textit{topological} (cấu trúc) của BN, độc lập với chi tiết của hàm cập nhật. Nó hữu ích vì:
+The influence graph captures the \textit{topological} structure of the BN, independently of the precise form of the update functions. It is useful because:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Trực quan hoá nhanh} cấu trúc điều hoà mà không cần chạy mô phỏng.
-    \item \textbf{Phát hiện feedback loop}: Vòng kín có số cạnh \texttt{-} chẵn $\Rightarrow$ \textit{positive feedback} (thường gây multistability). Số cạnh \texttt{-} lẻ $\Rightarrow$ \textit{negative feedback} (thường gây oscillation).
-    \item \textbf{Dự đoán định tính} sự tồn tại của attractor: Theo định lý Thomas \cite{thomas1981}, một mạng có nhiều fixed-point đòi hỏi tồn tại ít nhất một positive feedback loop trong influence graph; một mạng có dao động bền vững đòi hỏi ít nhất một negative feedback loop.
+    \item It \textbf{visualises} the regulatory structure quickly, with no need to run simulations.
+    \item It exposes \textbf{feedback loops}: a closed loop with an even number of negative edges is a \textit{positive feedback} loop (usually associated with multistability); a loop with an odd number of negative edges is a \textit{negative feedback} loop (usually associated with oscillations).
+    \item It allows \textbf{qualitative predictions} about the existence of attractors. According to Thomas's theorem \cite{thomas1981}, a network with multiple fixed-points requires at least one positive feedback loop, and a network with sustained oscillations requires at least one negative feedback loop.
 \end{itemize}
 
-\subsection{Sơ đồ cập nhật: Synchronous vs Asynchronous}\label{subsec:update-schemes}
+\subsection{Update schemes: synchronous vs asynchronous}\label{subsec:update-schemes}
 
-Một câu hỏi cốt yếu khi mô phỏng BN là: \textit{tại mỗi bước thời gian, có bao nhiêu node được cập nhật cùng lúc?} Có hai sơ đồ chuẩn được sử dụng rộng rãi -- mỗi sơ đồ phản ánh một giả định khác nhau về thời gian biểu của hệ thống.
+A key question when simulating a BN is: \textit{at each time step, how many nodes are updated simultaneously?} Two canonical schemes are widely used -- each reflecting a different assumption about the system's clocking.
 
-\subsubsection{Sơ đồ Synchronous}
+\subsubsection{Synchronous scheme}
 
-\textbf{Định nghĩa}: Tại mỗi bước $t \to t+1$, \textit{tất cả} các node được cập nhật \textit{đồng thời} dựa trên cùng một trạng thái $x^{(t)}$:
+\textbf{Definition}: At each step $t \to t+1$, \textit{all} nodes are updated \textit{simultaneously} based on the same current state $x^{(t)}$:
 $$x_i^{(t+1)} = f_i(x^{(t)}) \quad \forall i = 1, \ldots, n$$
 
-Hàm chuyển trạng thái toàn cục là $F : \{0,1\}^n \to \{0,1\}^n$ với $F(x) = (f_1(x), \ldots, f_n(x))$.
+The global transition function is $F : \{0,1\}^n \to \{0,1\}^n$ with $F(x) = (f_1(x), \ldots, f_n(x))$.
 
-\textbf{Tính chất quan trọng}:
+\textbf{Key properties}:
 \begin{itemize}[leftmargin=*]
-    \item Hàm $F$ là \textit{tất định} (deterministic): mỗi trạng thái có đúng \textit{một} trạng thái kế tiếp.
-    \item STG có \textbf{out-degree 1} ở mọi node.
-    \item Vì $|\mathcal{X}| = 2^n$ hữu hạn và mỗi trajectory tất định, \textit{mọi} trajectory cuối cùng đều đi vào một \textit{vòng tuần hoàn} (cycle) hoặc một \textit{điểm cố định} (fixed point).
+    \item The function $F$ is \textit{deterministic}: every state has exactly \textit{one} successor.
+    \item The STG has \textbf{out-degree 1} at every node.
+    \item Because $|\mathcal{X}| = 2^n$ is finite and the trajectory is deterministic, \textit{every} trajectory eventually enters a \textit{cycle} or a \textit{fixed point}.
 \end{itemize}
 
-\textbf{Ưu điểm}: Dễ phân tích, dễ tính toán, phù hợp với các hệ thống có \textit{xung nhịp chung} (clock-driven) như mạch logic số.
+\textbf{Advantages}: Easy to analyse, easy to compute, well-suited to systems with a \textit{common clock} (clock-driven), such as digital logic circuits.
 
-\textbf{Nhược điểm}: Trong sinh học, giả định mọi gene cập nhật cùng nhịp là phi thực tế (mỗi gene có tốc độ phiên mã/dịch mã khác nhau). Sync có thể tạo ra các \textit{artifact} (vòng giả) không tồn tại trong hệ thống thực.
+\textbf{Disadvantages}: In biology, the assumption that every gene is updated on the same clock is unrealistic (each gene has its own transcription/translation speed). The synchronous scheme can therefore produce \textit{artifacts} (spurious cycles) that do not exist in the real system.
 
-\subsubsection{Sơ đồ Asynchronous}
+\subsubsection{Asynchronous scheme}
 
-\textbf{Định nghĩa}: Tại mỗi bước $t \to t+1$, \textit{chỉ một} node được chọn (không tất định) để cập nhật; các node khác giữ nguyên giá trị:
-$$x_i^{(t+1)} = \begin{cases} f_i(x^{(t)}) & \text{nếu } i = j \text{ (node được chọn)} \\ x_i^{(t)} & \text{nếu } i \neq j \end{cases}$$
+\textbf{Definition}: At each step $t \to t+1$, \textit{only one} node $j$ is chosen (non-deterministically) and updated; the others keep their values:
+$$x_i^{(t+1)} = \begin{cases} f_j(x^{(t)}) & \text{if } i = j \\ x_i^{(t)} & \text{if } i \neq j \end{cases}$$
 
-Nếu $f_j(x^{(t)}) = x_j^{(t)}$ thì việc cập nhật $j$ không làm trạng thái đổi $\Rightarrow$ ta chỉ \textit{liệt kê các successor mà thực sự khác} trạng thái hiện tại. Nếu \textit{không có} node nào có thể làm đổi trạng thái (tức $x$ là fixed-point), ta thêm self-loop để STG luôn có ra-cạnh.
+If $f_j(x^{(t)}) = x_j^{(t)}$, updating $j$ leaves the state unchanged; we only \textit{enumerate the successors that actually differ} from the current state. If \textit{no} node can change the state (i.e.\ $x$ is a fixed-point), we add a self-loop so that the STG remains total.
 
-\textbf{Tính chất quan trọng}:
+\textbf{Key properties}:
 \begin{itemize}[leftmargin=*]
-    \item Hàm chuyển là \textbf{quan hệ một-nhiều} (non-deterministic): mỗi trạng thái có thể có nhiều successor.
-    \item STG có out-degree từ 1 (fixed point có self-loop) đến $n$.
-    \item Có thể xuất hiện \textit{complex attractor} -- các terminal SCC không phải simple cycle.
+    \item The transition is a \textbf{one-to-many} relation (non-deterministic): a state may have several successors.
+    \item The STG out-degree ranges from 1 (fixed point with self-loop) to $n$.
+    \item \textit{Complex attractors} can appear -- terminal SCCs that are not simple cycles.
 \end{itemize}
 
-\textbf{Ưu điểm}: Phản ánh thực tế sinh học (mỗi sự kiện xảy ra ở một thời điểm khác nhau).
+\textbf{Advantages}: Closer to biological reality (each event happens at a different point in time).
 
-\textbf{Nhược điểm}: Số chuyển khả dĩ lớn (tới $2^n \times n$ cạnh), khó trực quan hoá khi $n > 6$.
+\textbf{Disadvantages}: The number of possible transitions is large (up to $2^n \times n$ edges), making the STG hard to visualise once $n > 6$.
 
-\subsubsection{Ví dụ so sánh: bistable toggle 2 node}
+\subsubsection{A side-by-side comparison: the 2-node bistable toggle}
 
-Xét mạng \textit{bistable toggle} kinh điển (Gardner \emph{et al.} 2000 \cite{gardner2000toggle}): \texttt{A, !B} và \texttt{B, !A}. Bảng~\ref{tab:sync-vs-async} so sánh hành vi của 4 trạng thái dưới hai sơ đồ.
+Consider the classical \textit{bistable toggle} (Gardner \emph{et al.} 2000 \cite{gardner2000toggle}): \texttt{A, !B} and \texttt{B, !A}. Table~\ref{tab:sync-vs-async} compares the behaviour of the four states under both schemes.
 
 \begin{table}[H]
     \centering
@@ -401,49 +401,49 @@ Xét mạng \textit{bistable toggle} kinh điển (Gardner \emph{et al.} 2000 \c
     \begin{tabular}{|c|c|c|p{0.36\textwidth}|}
         \hline
         \rowcolor{bklight}
-        \textbf{State} & \textbf{Sync successor} & \textbf{Async successors} & \textbf{Diễn giải} \\
+        \textbf{State} & \textbf{Sync successor} & \textbf{Async successors} & \textbf{Interpretation} \\
         \hline
-        \texttt{00} & \texttt{11} & \{\texttt{10}, \texttt{01}\} & Cả hai gene đều được "bật"; sync nhảy thẳng tới \texttt{11}; async tách thành hai nhánh. \\
+        \texttt{00} & \texttt{11} & \{\texttt{10}, \texttt{01}\} & Both genes want to turn on; sync jumps directly to \texttt{11}; async branches in two directions. \\
         \hline
-        \texttt{01} & \texttt{01} & \{\texttt{01}\} (self-loop) & Fixed point \textbf{B-on}; sync và async đều ổn định. \\
+        \texttt{01} & \texttt{01} & \{\texttt{01}\} (self-loop) & Fixed point \textbf{B-on}; stable under both schemes. \\
         \hline
-        \texttt{10} & \texttt{10} & \{\texttt{10}\} (self-loop) & Fixed point \textbf{A-on}; sync và async đều ổn định. \\
+        \texttt{10} & \texttt{10} & \{\texttt{10}\} (self-loop) & Fixed point \textbf{A-on}; stable under both schemes. \\
         \hline
-        \texttt{11} & \texttt{00} & \{\texttt{01}, \texttt{10}\} & Cả hai gene đều "tắt"; sync nhảy về \texttt{00}; async tách thành hai nhánh. \\
+        \texttt{11} & \texttt{00} & \{\texttt{01}, \texttt{10}\} & Both genes want to turn off; sync jumps back to \texttt{00}; async branches in two directions. \\
         \hline
     \end{tabular}
-    \caption{Sync vs Async cho mạng bistable toggle}
+    \caption{Sync vs Async for the bistable toggle}
     \label{tab:sync-vs-async}
 \end{table}
 
-Hệ quả: dưới sync, ngoài 2 fixed-point ta còn có \textit{2-cycle} $\{\texttt{00} \leftrightarrow \texttt{11}\}$ -- một \textit{artifact} không tồn tại trong async. Dưới async, chỉ còn lại 2 fixed-point đúng (Hình~\ref{fig:stg-async-bistable}).
+Consequence: under sync, in addition to the two fixed points we obtain a \textit{2-cycle} $\{\texttt{00} \leftrightarrow \texttt{11}\}$ -- a sync-only \textit{artifact}. Under async, only the two true fixed points remain (Figure~\ref{fig:stg-async-bistable}).
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{../docs/img/stg_async_bistable.png}
-    \caption{State Transition Graph (async) của bistable toggle. Hai node màu cam là hai fixed-point attractor; các trạng thái \texttt{00} và \texttt{11} là transient.}
+    \caption{Asynchronous STG of the bistable toggle. The two orange nodes are the two fixed-point attractors; the states \texttt{00} and \texttt{11} are transient.}
     \label{fig:stg-async-bistable}
 \end{figure}
 
-\subsection{State Transition Graph (STG)}\label{subsec:stg}
+\subsection{The State Transition Graph (STG)}\label{subsec:stg}
 
-\subsubsection{Định nghĩa}
+\subsubsection{Definition}
 
 \begin{quote}
-\textit{Cho Boolean Network} $\mathcal{B}$ \textit{và sơ đồ cập nhật} $u \in \{\text{sync}, \text{async}\}$\textit{, State Transition Graph là đồ thị có hướng}
+\textit{Given a Boolean Network} $\mathcal{B}$ \textit{and an update scheme} $u \in \{\text{sync}, \text{async}\}$\textit{, the State Transition Graph is the directed graph}
 $$G_{\text{STG}}^{(u)} = (\mathcal{X}, E_{\text{STG}}^{(u)})$$
-\textit{trong đó:}
+\textit{where:}
 \begin{itemize}[leftmargin=*]
-    \item Đỉnh là toàn bộ $2^n$ trạng thái.
-    \item Cạnh $(x, y) \in E_{\text{STG}}^{(u)}$ tồn tại khi $y$ là successor hợp lệ của $x$ dưới sơ đồ $u$.
+    \item The vertices are all $2^n$ states.
+    \item An edge $(x, y) \in E_{\text{STG}}^{(u)}$ exists iff $y$ is a valid successor of $x$ under scheme $u$.
 \end{itemize}
 \end{quote}
 
-STG là biểu diễn \textit{đầy đủ} động học của BN. Mọi câu hỏi về hành vi dài hạn (attractor, basin) đều có thể trả lời bằng cách phân tích STG.
+The STG is a \textit{complete} representation of the BN dynamics. Every question about the long-term behaviour (attractor, basin) can be answered by analysing the STG.
 
-\subsubsection{Kích thước và biểu diễn}
+\subsubsection{Size and representation}
 
-Số đỉnh của STG là $2^n$, tăng theo cấp số mũ với $n$. Bảng~\ref{tab:stg-size} cho thấy mức độ bùng nổ.
+The STG has $2^n$ vertices, which grows exponentially with $n$. Table~\ref{tab:stg-size} shows how rapidly the size explodes.
 
 \begin{table}[H]
     \centering
@@ -451,80 +451,80 @@ Số đỉnh của STG là $2^n$, tăng theo cấp số mũ với $n$. Bảng~\r
     \begin{tabular}{|c|r|r|p{0.30\textwidth}|}
         \hline
         \rowcolor{bklight}
-        \textbf{n (nodes)} & \textbf{States $2^n$} & \textbf{Sync edges} & \textbf{Khả năng trực quan} \\
+        \textbf{n (nodes)} & \textbf{States $2^n$} & \textbf{Sync edges} & \textbf{Visualisation feasibility} \\
         \hline
-        3  & 8         & 8        & Rất dễ vẽ thủ công \\
-        5  & 32        & 32       & Còn dễ vẽ \\
-        7  & 128       & 128      & Đầy đặc, vẫn xem được \\
-        10 & 1\,024     & 1\,024    & Chỉ dùng layout tự động \\
-        15 & 32\,768    & 32\,768   & Khó render trên màn hình \\
-        20 & 1\,048\,576 & $\sim$10$^6$ & Vượt RAM thường \\
-        25 & 33\,554\,432 & $\sim$3$\cdot$10$^7$ & Bất khả thi với memory thường \\
+        3  & 8         & 8        & Very easy to draw by hand \\
+        5  & 32        & 32       & Still easy \\
+        7  & 128       & 128      & Dense but readable \\
+        10 & 1\,024     & 1\,024    & Only via automatic layout \\
+        15 & 32\,768    & 32\,768   & Hard to render on screen \\
+        20 & 1\,048\,576 & $\sim$10$^6$ & Exceeds typical RAM \\
+        25 & 33\,554\,432 & $\sim$3$\cdot$10$^7$ & Infeasible with explicit memory \\
         \hline
     \end{tabular}
-    \caption{Tăng trưởng kích thước STG theo $n$}
+    \caption{Growth of STG size with $n$}
     \label{tab:stg-size}
 \end{table}
 
-Đây là \textbf{thách thức cốt lõi} của phân tích BN -- \textit{state explosion}. Các thư viện chuyên sâu (PyBoolNet, GINsim) dùng các kỹ thuật symbolic (BDD -- Binary Decision Diagram, AIG) để xử lý $n > 30$. Trong phạm vi đề tài này, chúng em chỉ hiện thực \textit{explicit enumeration} -- phù hợp đến $n \approx 15$--$18$.
+This is the \textbf{core challenge} of BN analysis -- \textit{state explosion}. Advanced libraries (PyBoolNet, GINsim) use symbolic techniques (BDD -- Binary Decision Diagram, AIG) to handle $n > 30$. Within the scope of this project we only implement \textit{explicit enumeration}, which is appropriate up to $n \approx 15$--$18$.
 
-\subsubsection{Ví dụ: STG synchronous của \textit{repressilator}}
+\subsubsection{Example: synchronous STG of the \textit{repressilator}}
 
-Mạng \textit{repressilator} (Elowitz \& Leibler 2000): \texttt{A, !C / B, !A / C, !B} là 3 gene đè lẫn nhau theo vòng. Dưới sync, 8 trạng thái phân thành một \textit{cycle dài 6} (đại diện cho vòng dao động) và một \textit{cycle dài 2} (artifact giữa \texttt{000} và \texttt{111}).
+The \textit{repressilator} (Elowitz \& Leibler 2000): \texttt{A,!C/B,!A/C,!B} is a cyclic 3-gene mutual-inhibition network. Under sync, the 8 states partition into a \textit{6-cycle} (representing the oscillation) and a \textit{2-cycle} (artifact between \texttt{000} and \texttt{111}).
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.78\textwidth]{../docs/img/stg_sync_repressilator.png}
-    \caption{STG synchronous của repressilator. Các node màu cam thuộc về attractor; vòng 6 trạng thái biểu diễn dao động sinh học, vòng 2 trạng thái là artifact của sync.}
+    \caption{Synchronous STG of the repressilator. The orange nodes belong to the attractors; the 6-state ring represents the biological oscillation, while the 2-cycle is a sync artifact.}
     \label{fig:stg-repressilator}
 \end{figure}
 
-\subsection{Attractor: Point \& Cyclic \& Complex}\label{subsec:attractor}
+\subsection{Attractors: point, cyclic and complex}\label{subsec:attractor}
 
-\subsubsection{Định nghĩa}
+\subsubsection{Definition}
 
 \begin{quote}
-\textit{Một} attractor \textit{của BN là một tập trạng thái} $A \subseteq \mathcal{X}$ \textit{thoả mãn:}
+\textit{An} attractor \textit{of a BN is a set of states} $A \subseteq \mathcal{X}$ \textit{satisfying:}
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Bất biến} (forward-invariance): Mọi successor của một trạng thái $x \in A$ đều thuộc $A$.
-    \item \textbf{Liên thông mạnh} (strongly connected): Mọi cặp $x, y \in A$ đều có một đường đi $x \rightsquigarrow y$ trong STG.
-    \item \textbf{Cực tiểu}: Không có tập con thực sự $A' \subsetneq A$ nào cũng thoả (1) và (2).
+    \item \textbf{Forward-invariance}: every successor of every state in $A$ remains in $A$.
+    \item \textbf{Strong connectivity}: for every pair $x, y \in A$ there is a path $x \rightsquigarrow y$ in the STG.
+    \item \textbf{Minimality}: no proper subset $A' \subsetneq A$ satisfies both (1) and (2).
 \end{enumerate}
 \end{quote}
 
-Một cách hình học, attractor chính là \textit{thành phần liên thông mạnh cuối} (terminal SCC) của STG -- là SCC mà từ trong đó không có cạnh nào ra ngoài. Mọi trajectory bắt đầu từ bất kỳ trạng thái nào cuối cùng đều phải kết thúc ở một attractor (vì $\mathcal{X}$ hữu hạn và STG có cạnh tới mọi node).
+Geometrically, an attractor is exactly a \textit{terminal strongly connected component} (terminal SCC) of the STG -- an SCC with no outgoing edges in the condensation graph. Because $\mathcal{X}$ is finite and the STG is total, every trajectory eventually reaches some attractor.
 
-\subsubsection{Phân loại attractor}
+\subsubsection{Classification of attractors}
 
-Trong phần mềm Boolean Network Analyzer, chúng em phân attractor thành ba loại:
+In the Boolean Network Analyzer, attractors are classified into three kinds:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Fixed-point (steady state)}: $|A| = 1$ và $A = \{x^*\}$ với $F(x^*) = x^*$ (sync) hoặc với mọi $i$, $f_i(x^*) = x_i^*$ (async). Đại diện cho \textit{kiểu hình ổn định} của hệ thống (vd: trạng thái G1 của tế bào).
-    \item \textbf{Cyclic}: $|A| \geq 2$ và subgraph $G[A]$ là một \textit{simple cycle} -- mỗi node trong $A$ có đúng một successor trong $A$. Trong sync, mọi attractor không phải fixed-point đều là cyclic. Đại diện cho \textit{dao động tuần hoàn} (vd: chu kỳ tế bào).
-    \item \textbf{Complex}: $|A| \geq 2$ và $G[A]$ không phải simple cycle -- có node với nhiều successor trong $A$. Chỉ xuất hiện trong async. Đại diện cho \textit{vùng trapping} mà hệ thống lang thang ngẫu nhiên nhưng không thể thoát.
+    \item \textbf{Fixed-point (steady state)}: $|A| = 1$ and $A = \{x^*\}$ with $F(x^*) = x^*$ (sync) or $f_i(x^*) = x_i^*$ for every $i$ (async). It represents a \textit{stable phenotype} of the system (e.g.\ the G1 state of a cell).
+    \item \textbf{Cyclic}: $|A| \geq 2$ and the induced subgraph $G[A]$ is a \textit{simple cycle} -- every node in $A$ has exactly one successor inside $A$. In sync STGs every non-fixed-point attractor is cyclic. It represents \textit{periodic oscillation} (e.g.\ the cell cycle).
+    \item \textbf{Complex}: $|A| \geq 2$ and $G[A]$ is not a simple cycle -- at least one node has several successors inside $A$. Only appears in async STGs. It represents a \textit{trapping region} in which the system wanders non-deterministically without ever escaping.
 \end{enumerate}
 
-\subsubsection{Vùng hút (Basin of Attraction)}
+\subsubsection{Basin of attraction}
 
 \begin{quote}
-\textit{Cho attractor} $A$\textit{:}
+\textit{For an attractor} $A$\textit{:}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Weak basin} (vùng hút yếu): Tập các trạng thái $x \in \mathcal{X}$ sao cho \textit{tồn tại ít nhất một} trajectory từ $x$ tới $A$.
-    \item \textbf{Strong basin} (vùng hút mạnh): Tập các trạng thái $x$ sao cho \textit{mọi} trajectory từ $x$ đều phải tới $A$ (không tới attractor nào khác).
+    \item The \textbf{weak basin} is the set of states $x \in \mathcal{X}$ from which \textit{at least one} trajectory reaches $A$.
+    \item The \textbf{strong basin} is the set of states $x$ from which \textit{every} trajectory must reach $A$ (and no other attractor).
 \end{itemize}
 \end{quote}
 
-Trong STG sync (out-degree 1), strong basin trùng weak basin. Trong STG async, strong basin là tập con thực sự của weak basin nếu có nhiều attractor.
+In a sync STG (out-degree 1) the strong basin coincides with the weak basin. In an async STG the strong basin can be a proper subset of the weak basin if multiple attractors exist.
 
-Tổng kích thước weak basin của tất cả attractor có thể vượt $|\mathcal{X}|$ (nếu các basin chồng lên nhau), nhưng tổng strong basin luôn bằng đúng $|\mathcal{X}|$ -- chia hoàn toàn không gian trạng thái.
+The total size of the weak basins over all attractors may exceed $|\mathcal{X}|$ (when basins overlap), but the total size of the strong basins is exactly $|\mathcal{X}|$ -- they partition the state space.
 
-\subsubsection{Ý nghĩa sinh học và kỹ thuật}
+\subsubsection{Biological and engineering meaning}
 
-Theo \textit{Kauffman's hypothesis}, mỗi kiểu hình ổn định của tế bào (gan, cơ, thần kinh, ...) tương ứng với một attractor khác nhau của cùng một mạng điều hoà gene. Số lượng attractor và kích thước basin do đó liên quan trực tiếp đến \textit{khả năng phân hoá tế bào} và \textit{tính chống nhiễu sinh học}. Đối với kỹ thuật, attractor chính là tập trạng thái mà hệ thống dừng lại sau quá trình quá độ -- một mạch số có nhiều fixed-point ngoài ý muốn có thể là dấu hiệu của \textit{stuck state} cần được debug.
+According to \textit{Kauffman's hypothesis}, each stable cell phenotype (liver, muscle, neuron, ...) corresponds to a different attractor of the same underlying gene regulatory network. The number of attractors and the size of their basins are therefore directly related to a cell's \textit{differentiation potential} and to its \textit{biological robustness}. In engineering, attractors describe the states the system settles into after a transient -- a digital circuit with unexpected fixed-points may indicate a \textit{stuck-state} bug that needs debugging.
 
-\subsection{Đối chiếu với các công cụ chuẩn}\label{subsec:tools-compare}
+\subsection{Comparison with reference tools}\label{subsec:tools-compare}
 
-Bảng~\ref{tab:tool-compare} liệt kê các công cụ phân tích BN phổ biến và vị trí của Boolean Network Analyzer trong ngữ cảnh đó.
+Table~\ref{tab:tool-compare} lists popular BN analysis tools and places our Boolean Network Analyzer in context.
 
 \begin{table}[H]
     \centering
@@ -533,98 +533,111 @@ Bảng~\ref{tab:tool-compare} liệt kê các công cụ phân tích BN phổ bi
     \begin{tabular}{|p{0.18\textwidth}|p{0.13\textwidth}|p{0.20\textwidth}|p{0.16\textwidth}|p{0.18\textwidth}|}
         \hline
         \rowcolor{bklight}
-        \textbf{Công cụ} & \textbf{Ngôn ngữ} & \textbf{Giao diện} & \textbf{Tối đa $n$} & \textbf{Backend} \\
+        \textbf{Tool} & \textbf{Language} & \textbf{Interface} & \textbf{Max practical $n$} & \textbf{Backend} \\
         \hline
-        GINsim \cite{naldi2009} & Java & GUI Swing + CLI & $\sim$30 & MDD (multi-valued) \\
+        GINsim \cite{naldi2009} & Java & Swing GUI + CLI & $\sim$30 & MDD (multi-valued) \\
         \hline
-        PyBoolNet \cite{klarner2017pyboolnet} & Python & API + CLI & $\sim$60 & BDD (Cudd) \\
+        PyBoolNet \cite{klarner2017pyboolnet} & Python & API + CLI & $\sim$60 & BDD (CUDD) \\
         \hline
         BoolNet (R) & R & R-script + Shiny & $\sim$30 & Explicit \\
         \hline
         CellNetAnalyzer & MATLAB & GUI & $\sim$60 & SAT/BDD \\
         \hline
-        \textbf{BNAnalyzer (đề tài)} & Python & Web (Streamlit) & $\sim$15--18 & Explicit (NetworkX) \\
+        \textbf{BNAnalyzer (this project)} & JS + Python & Web (static, GitHub Pages) & $\sim$14--16 & Explicit (vis-network/NetworkX) \\
         \hline
     \end{tabular}
-    \caption{So sánh các công cụ phân tích Boolean Network}
+    \caption{Comparison of Boolean Network analysis tools}
     \label{tab:tool-compare}
 \end{table}
 
-Như có thể thấy, Boolean Network Analyzer của đề tài \textit{không tham vọng vượt mặt} các công cụ chuyên sâu -- mà tập trung vào \textit{trải nghiệm tương tác trực quan} cho mạng nhỏ--vừa (3 đến 15 nodes), với điểm mạnh là giao diện web nhẹ và source code Python ngắn gọn (dưới 1\,000 dòng) dễ học, dễ sửa.
+Our Boolean Network Analyzer is \textit{not meant to surpass} those professional tools -- it focuses on a \textit{lightweight, interactive experience} for small-to-medium networks (3--15 nodes), with the key advantages of a friendly web interface and a compact Python codebase (under 1\,000 lines) that is easy to read and modify.
 
 %======================================================================
-\section{Phương pháp \& Thiết kế hệ thống}\label{sec:method}
+\section{Methodology \& System Design}\label{sec:method}
 %======================================================================
 
-Mục này trình bày \textit{kiến trúc tổng thể, cấu trúc dữ liệu và thuật toán cốt lõi} của phần mềm Boolean Network Analyzer. Em tổ chức theo trật tự dòng dữ liệu: từ file \texttt{.bnet} đầu vào tới các đồ thị và attractor đầu ra trên giao diện web.
+This section describes the \textit{overall architecture, data structures and core algorithms} of the Boolean Network Analyzer. The discussion follows the data flow: from the input \texttt{.bnet} file all the way to the rendered graphs and attractor lists on the web UI.
 
-\subsection{Kiến trúc tổng thể}\label{subsec:arch}
+\subsection{Overall architecture}\label{subsec:arch}
 
-Phần mềm được tổ chức theo mô hình \textit{layered pipeline}: dữ liệu đi tuyến tính từ tầng trên (UI) xuống tầng dưới (engine) và quay lại UI dưới dạng hình. Hình~\ref{fig:architecture} minh hoạ sơ đồ khối kiến trúc.
+The software is delivered as a \textit{client-only} web application, hosted as a static site on GitHub Pages. There is no backend server, no database and no installation step on the user side: the user simply opens the live demo URL and the entire analysis pipeline runs locally in their browser tab.
+
+The same algorithmic pipeline is implemented \textit{twice}, in parallel: once in vanilla JavaScript (the user-facing engine, shipped in \texttt{docs/app.html}) and once in Python (the reference engine in \texttt{src/bnanalyzer/}, used by the \texttt{pytest} suite and by the optional CLI \texttt{app.py}). Both engines share the same staged design -- Parser $\rightarrow$ Network $\rightarrow$ STG $\rightarrow$ Attractors $\rightarrow$ Visualiser -- and produce byte-identical attractor sets on every sample. Figure~\ref{fig:architecture} shows the resulting block diagram.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[node distance=1.0cm and 1.4cm, font=\small]
-    \node[block] (ui) {Web UI / Landing Page};
-    \node[block, below=of ui, fill=blue!12] (parser) {Parser \\ \texttt{parser.py}};
-    \node[block, below=of parser, fill=blue!12] (net) {Network engine \\ \texttt{network.py}};
-    \node[block, below=of net, fill=blue!12] (stg) {STG builder \\ \texttt{stg.py}};
-    \node[block, below=of stg, fill=blue!12] (att) {Attractor finder \\ \texttt{attractors.py}};
-    \node[block, right=of net, fill=green!10] (vis) {Visualizer \\ \texttt{visualize.py}};
-    \node[cloudblock, left=of ui] (file) {file \texttt{.bnet} \\ (upload / sample)};
-    \node[cloudblock, right=of ui] (png) {PNG \\ (download)};
+\begin{tikzpicture}[node distance=0.9cm and 1.2cm, font=\small]
+    \node[cloudblock] (browser) {User's browser \\ (Chrome/Firefox/Edge)};
+    \node[block, below=of browser] (page) {Landing page \\ \texttt{docs/index.html}};
+    \node[block, right=of page, fill=orange!10] (demo) {Live demo \\ \texttt{docs/app.html}};
+    \node[block, below=of demo, fill=blue!12] (parser) {Parser (JS)};
+    \node[block, below=of parser, fill=blue!12] (net) {Network engine (JS)};
+    \node[block, below=of net, fill=blue!12] (stg) {STG builder (JS)};
+    \node[block, below=of stg, fill=blue!12] (att) {Attractor finder (JS, iterative Tarjan)};
+    \node[block, right=of stg, fill=green!10] (vis) {vis-network \\ (CDN)};
+    \node[cloudblock, left=of demo] (file) {\texttt{.bnet} file \\ (sample/upload/paste)};
+    \node[dbblock, below=of att] (py) {Python ref. engine \\ \texttt{src/bnanalyzer/} \\ (tests + CLI)};
 
-    \draw[arrow] (file) -- (ui);
-    \draw[arrow] (ui) -- node[right]{\ttfamily source string} (parser);
-    \draw[arrow] (parser) -- node[right]{\ttfamily ParsedRule[]} (net);
-    \draw[arrow] (net) -- node[right]{\ttfamily BooleanNetwork} (stg);
-    \draw[arrow] (stg) -- node[right]{\ttfamily nx.DiGraph} (att);
-    \draw[arrow] (att.east) to[bend right=18] node[below]{\ttfamily Attractor[]} (vis);
-    \draw[arrow] (stg.east) to[bend right=8] node[above]{\ttfamily STG} (vis);
-    \draw[arrow] (net.east) to[bend right=8] (vis);
-    \draw[arrow] (vis.north) to[bend right=12] node[above]{\ttfamily fig} (ui);
-    \draw[arrow] (ui) -- (png);
+    \draw[arrow] (browser) -- (page);
+    \draw[arrow] (page) -- node[above]{\small ``Try the demo''} (demo);
+    \draw[arrow] (file) -- (demo);
+    \draw[arrow] (demo) -- (parser);
+    \draw[arrow] (parser) -- (net);
+    \draw[arrow] (net) -- (stg);
+    \draw[arrow] (stg) -- (att);
+    \draw[arrow] (att.east) to[bend right=10] node[right]{\small render} (vis);
+    \draw[arrow] (vis.north) to[bend right=20] (demo);
+    \draw[arrow,dashed] (py.north) -- node[right]{\small same algo, validated} (att);
 \end{tikzpicture}
-\caption{Kiến trúc tổng thể phần mềm Boolean Network Analyzer}
+\caption{Overall architecture of the Boolean Network Analyzer: a fully client-side web app deployed via GitHub Pages, with a Python reference engine kept for tests and batch use.}
 \label{fig:architecture}
 \end{figure}
 
-Giải thích vai trò mỗi module:
+Module responsibilities (in-browser JS engine, which is the primary deliverable):
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{\texttt{app.py}} (Web UI (Landing Page)): Điểm vào của ứng dụng. Quản lý sidebar (chọn nguồn \texttt{.bnet}, chọn sơ đồ cập nhật), gọi các module backend, hiển thị kết quả qua 5 tab.
-    \item \textbf{\texttt{parser.py}}: Tách rule, kiểm tra cú pháp, chuyển biểu thức \texttt{.bnet} sang biểu thức Python để \texttt{eval}.
-    \item \textbf{\texttt{network.py}}: Lớp \texttt{BooleanNetwork} bao bọc tập rule đã parse, cung cấp các phép evaluate, conversion state $\leftrightarrow$ string $\leftrightarrow$ dict, và xây influence graph.
-    \item \textbf{\texttt{stg.py}}: Sinh STG dưới cả hai sơ đồ sync/async; trả về \texttt{nx.DiGraph}.
-    \item \textbf{\texttt{attractors.py}}: Tìm tất cả terminal SCC trên STG, phân loại, tính basin.
-    \item \textbf{\texttt{visualize.py}}: Sinh figure \texttt{matplotlib} cho influence graph và STG với layout, màu sắc, legend.
+    \item \textbf{\texttt{docs/index.html}}: The landing page. Provides the project description, screenshots, install/usage notes, sample table and a prominent ``Try the demo'' call-to-action.
+    \item \textbf{\texttt{docs/app.html}}: The single-page interactive analyser. Bundles the entire algorithmic engine (parser, network, STG, attractors), the UI layout (sidebar + five tabs) and only pulls in \texttt{vis-network} from a CDN for the graph rendering. Everything else is inlined (no external JS file, no build step).
+    \item Inside \texttt{app.html}: the \textit{Parser} converts a \texttt{.bnet} expression into a JavaScript function via \texttt{new Function(...)}; the \textit{Network} class wraps the rule set, evaluates rules, and infers the signed influence graph; the \textit{STG builder} produces the synchronous or asynchronous transition graph; the \textit{Attractor finder} runs an iterative (non-recursive, stack-safe up to $2^{16}$ states) Tarjan algorithm.
 \end{itemize}
 
-Sự tách rõ ràng giữa logic (5 module backend) và UI (\texttt{app.py}) cho phép em viết \texttt{pytest} cho backend mà không cần khởi động giao diện web, đồng thời mở đường cho việc đóng gói thành thư viện Python độc lập (\texttt{pip install bnanalyzer}) trong tương lai.
+The same modules are re-implemented in Python under \texttt{src/bnanalyzer/} -- \texttt{parser.py}, \texttt{network.py}, \texttt{stg.py}, \texttt{attractors.py}, \texttt{visualize.py} -- and serve three purposes: (i) they are the substrate for the \texttt{pytest} test suite (\S\ref{subsec:exp-summary}); (ii) they act as a Python API consumed by \texttt{app.py}, a thin CLI exposing the same pipeline from the terminal for batch jobs and for reproducing report figures; (iii) they are the cross-check against PyBoolNet documented in \S\ref{subsec:validation}.
 
-\subsection{Tổ chức source code và package layout}\label{subsec:layout}
+The clear separation between the in-browser JavaScript engine, the Python reference engine and the static landing page allows \texttt{pytest} tests to run without spinning up any web server, and lets the live demo be redeployed at zero cost by pushing to \texttt{main}.
 
-Em tuân theo chuẩn \texttt{src-layout} của Python (PEP 518, PEP 621):
+\subsection{Source code layout}\label{subsec:layout}
+
+The project follows the Python \texttt{src-layout} convention (PEP 518, PEP 621):
 
 \begin{verbatim}
-DATH/                          # Project root
-+-- app.py                     # Streamlit entry point
-+-- requirements.txt           # Pinned dependencies
+boolean-network-analyzer/      # Project root
 +-- README.md                  # Quick-start instructions
++-- requirements.txt           # Python deps (no UI deps -- web app is HTML/JS)
 +-- LICENSE
++-- app.py                     # Optional CLI front-end for the Python engine
+|
++-- docs/                      # GitHub Pages root (the live demo lives here)
+|   +-- index.html             # Landing page
+|   +-- app.html               # In-browser analyser (vanilla JS + vis-network)
+|   +-- _config.yml            # Jekyll opt-out
+|   +-- .nojekyll
+|   +-- img/                   # Pre-rendered figures
+|
 +-- src/
-|   +-- bnanalyzer/            # Importable package
+|   +-- bnanalyzer/            # Python reference engine (used by tests/CLI)
 |       +-- __init__.py
 |       +-- parser.py
 |       +-- network.py
 |       +-- stg.py
 |       +-- attractors.py
 |       +-- visualize.py
-+-- tests/                     # pytest test suite
+|
++-- tests/                     # pytest suite (23 cases)
 |   +-- test_parser.py
 |   +-- test_network.py
 |   +-- test_stg_attractors.py
 |   +-- test_samples.py
+|
 +-- samples/                   # Bundled .bnet sample networks
 |   +-- toy_switch.bnet
 |   +-- bistable_toggle.bnet
@@ -632,70 +645,76 @@ DATH/                          # Project root
 |   +-- fission_yeast.bnet
 |   +-- mammalian_cell_cycle.bnet
 |   +-- README.md
-+-- docs/
-|   +-- img/                   # Pre-rendered figures for the report
+|
++-- scripts/                   # Maintenance scripts
+|   +-- cleanup_legacy.ps1
+|   +-- cleanup_legacy.sh
+|
++-- .github/workflows/
+|   +-- pages.yml              # Auto-deploys docs/ to GitHub Pages
+|
 +-- Report1/                   # LaTeX report (this document)
 \end{verbatim}
 
-Lợi ích của \texttt{src-layout}:
+Benefits of the \texttt{src-layout}:
 \begin{itemize}[leftmargin=*]
-    \item Tránh \textit{accidental import} (\texttt{import bnanalyzer} không bao giờ trỏ vào source chưa cài).
-    \item Cho phép cài đặt editable mode (\texttt{pip install -e .}) khi cần.
-    \item Tách bạch source và artifacts (test, docs).
+    \item It prevents \textit{accidental imports} -- \texttt{import bnanalyzer} can never resolve to the unpackaged source.
+    \item It supports editable installs (\texttt{pip install -e .}) when needed.
+    \item It cleanly separates source from artefacts (tests, docs).
 \end{itemize}
 
-\subsection{Cấu trúc dữ liệu trong bộ nhớ}\label{subsec:data-struct}
+\subsection{In-memory data structures}\label{subsec:data-struct}
 
 \subsubsection{ParsedRule}
 
-\begin{lstlisting}[caption={Cấu trúc dữ liệu \texttt{ParsedRule}}, label={lst:parsedrule}]
+\begin{lstlisting}[caption={The \texttt{ParsedRule} data class}, label={lst:parsedrule}]
 @dataclass
 class ParsedRule:
-    target: str                        # ten node duoc cap nhat
-    expression: str                    # bieu thuc goc (.bnet)
-    python_expression: str             # bieu thuc da chuyen sang Python
-    inputs: Tuple[str, ...]            # tap regulator (sorted, dedup)
+    target: str                        # name of the updated node
+    expression: str                    # original .bnet expression
+    python_expression: str             # translated Python expression
+    inputs: Tuple[str, ...]            # regulator set (sorted, deduped)
 \end{lstlisting}
 
-Lý do thiết kế:
+Design rationale:
 \begin{itemize}[leftmargin=*]
-    \item Lưu \texttt{expression} gốc để hiển thị nguyên văn trên UI.
-    \item Lưu \texttt{python\_expression} để Python \texttt{compile} một lần và \texttt{eval} nhiều lần khi duyệt $2^n$ trạng thái -- nhanh hơn parse lại từng lần.
-    \item \texttt{inputs} là tuple đã sắp xếp $\Rightarrow$ deterministic và có thể dùng làm key cache.
+    \item The original \texttt{expression} is kept for verbatim display on the UI.
+    \item \texttt{python\_expression} allows Python to \texttt{compile} once and \texttt{eval} many times when iterating over $2^n$ states -- much faster than re-parsing a string each time.
+    \item \texttt{inputs} is a sorted, deduplicated tuple, making it deterministic and suitable as a cache key.
 \end{itemize}
 
 \subsubsection{State}
 
-Mỗi trạng thái là \texttt{Tuple[bool, ...]} có độ dài $n$, trật tự theo \texttt{network.nodes}. Sử dụng \texttt{tuple} thay vì \texttt{list} vì:
+Each state is a \texttt{Tuple[bool, ...]} of length $n$, ordered according to \texttt{network.nodes}. We use \texttt{tuple} rather than \texttt{list} because:
 \begin{itemize}[leftmargin=*]
-    \item \textit{Hashable} $\Rightarrow$ dùng làm key trong \texttt{dict}/\texttt{set} (cần thiết cho \texttt{nx.DiGraph}).
-    \item \textit{Immutable} $\Rightarrow$ tránh side-effect khi pass quanh.
+    \item It is \textit{hashable}, so it can be used as a key in \texttt{dict}/\texttt{set} (required by \texttt{nx.DiGraph}).
+    \item It is \textit{immutable}, which avoids accidental mutation when passed around.
 \end{itemize}
 
-Mỗi state có hai biểu diễn phụ:
+Each state has two auxiliary representations:
 \begin{itemize}[leftmargin=*]
-    \item \texttt{dict[str, bool]}: dùng làm context cho \texttt{eval}.
-    \item Binary string (vd \texttt{"101"}): dùng làm label hiển thị.
+    \item \texttt{dict[str, bool]}: used as the context for \texttt{eval}.
+    \item Binary string (e.g.\ \texttt{"101"}): used as a display label.
 \end{itemize}
 
 \subsubsection{Graphs: NetworkX DiGraph}
 
-Mọi đồ thị (influence graph, STG) đều dùng \texttt{networkx.DiGraph} -- thư viện chuẩn de facto trong Python cho graph analysis. Lợi ích:
+Every graph (influence graph, STG) is represented as a \texttt{networkx.DiGraph} -- the de facto standard Python library for graph analysis. Benefits:
 \begin{itemize}[leftmargin=*]
-    \item Sẵn có \texttt{strongly\_connected\_components}, \texttt{condensation}, \texttt{ancestors} -- không phải tự cài Tarjan.
-    \item Hỗ trợ node/edge attribute (dùng để lưu \texttt{sign} cho influence graph, \texttt{label} cho STG).
-    \item Tích hợp tốt với \texttt{matplotlib} qua \texttt{nx.draw\_networkx\_*}.
+    \item Built-in implementations of \texttt{strongly\_connected\_components}, \texttt{condensation}, \texttt{ancestors}, so we do not have to reimplement Tarjan.
+    \item Supports per-node/per-edge attributes (used to store the \texttt{sign} on the influence graph and the \texttt{label} on the STG).
+    \item Integrates nicely with \texttt{matplotlib} via \texttt{nx.draw\_networkx\_*}.
 \end{itemize}
 
-\subsection{Thuật toán cốt lõi}\label{subsec:algorithms}
+\subsection{Core algorithms}\label{subsec:algorithms}
 
-\subsubsection{Thuật toán Parser}
+\subsubsection{Parser}
 
-Parser \texttt{.bnet} hoạt động theo hai pha:
+The \texttt{.bnet} parser operates in two phases.
 
-\textbf{Pha 1 -- Tokenization}: Quét tuyến tính chuỗi biểu thức, sinh ra danh sách token là \texttt{IDENT}, \texttt{(}, \texttt{)}, \texttt{!}, \texttt{\&}, \texttt{|}, \texttt{\&\&}, \texttt{||}, \texttt{0}, \texttt{1}. Bỏ qua whitespace.
+\textbf{Phase 1 -- Tokenization}: a linear scan of the expression produces a list of tokens: \texttt{IDENT}, \texttt{(}, \texttt{)}, \texttt{!}, \texttt{\&}, \texttt{|}, \texttt{\&\&}, \texttt{||}, \texttt{0}, \texttt{1}. Whitespace is skipped.
 
-\textbf{Pha 2 -- Translation}: Chuyển từng token sang biểu thức Python tương đương:
+\textbf{Phase 2 -- Translation}: each token is converted to its Python equivalent:
 
 \begin{table}[H]
     \centering
@@ -705,40 +724,40 @@ Parser \texttt{.bnet} hoạt động theo hai pha:
         \rowcolor{bklight}
         \textbf{.bnet} & \textbf{Python} & \textbf{.bnet} & \textbf{Python} \\
         \hline
-        \texttt{!} / \texttt{not} & \texttt{not} & \texttt{1} / \texttt{True} & \texttt{True} \\
+        \texttt{!}/\texttt{not} & \texttt{not} & \texttt{1}/\texttt{True} & \texttt{True} \\
         \hline
-        \texttt{\&} / \texttt{\&\&} / \texttt{and} & \texttt{and} & \texttt{0} / \texttt{False} & \texttt{False} \\
+        \texttt{\&}/\texttt{\&\&}/\texttt{and} & \texttt{and} & \texttt{0}/\texttt{False} & \texttt{False} \\
         \hline
-        \texttt{|} / \texttt{||} / \texttt{or} & \texttt{or} & \texttt{(}, \texttt{)} & \texttt{(}, \texttt{)} \\
+        \texttt{|}/\texttt{||}/\texttt{or} & \texttt{or} & \texttt{(}, \texttt{)} & \texttt{(}, \texttt{)} \\
         \hline
     \end{tabular}
-    \caption{Bảng chuyển token .bnet $\to$ Python}
+    \caption{Token translation table: .bnet $\to$ Python}
     \label{tab:token-map}
 \end{table}
 
-Sau Pha 2, parser thử \texttt{compile(py\_expr, "<bnet>", "eval")} để xác nhận biểu thức hợp lệ. Mọi rule còn bị \textit{cross-check}: mọi biến xuất hiện trong RHS phải có một rule riêng (tránh \textit{dangling input}).
+After Phase 2 the parser calls \texttt{compile(py\_expr, "<bnet>", "eval")} to validate the syntax. Every rule is also \textit{cross-checked}: every variable on the right-hand side must have its own rule (no \textit{dangling input}).
 
-\textbf{Phức tạp}: $O(L)$ với $L$ là tổng độ dài chuỗi -- tuyến tính.
+\textbf{Complexity}: $O(L)$ where $L$ is the total length of the expression -- linear.
 
-\textbf{Lý do chọn cách này}: Đơn giản, không cần dùng tới các parser generator như \texttt{ply} hoặc \texttt{lark}. Vì cú pháp \texttt{.bnet} rất hạn chế (chỉ 4 toán tử), một tokenizer thủ công + dịch tuần tự là đủ và dễ debug.
+\textbf{Why this approach}: it is simple and avoids using a parser generator like \texttt{ply} or \texttt{lark}. Because the \texttt{.bnet} grammar is small (four operators), a hand-written tokenizer followed by sequential translation is sufficient and easy to debug.
 
-\subsubsection{Thuật toán Evaluate (network)}
+\subsubsection{Evaluation}
 
-Để đánh giá rule $f_v$ trên trạng thái $x$, ta:
+To evaluate the rule $f_v$ on state $x$ we:
 \begin{enumerate}[leftmargin=*]
-    \item Tạo context \texttt{ctx = \{node\_name: bool\_value, ...\}}.
-    \item Gọi \texttt{eval(compiled\_code, \{"\_\_builtins\_\_": \{\}\}, ctx)} -- truyền dict rỗng cho builtins để tránh injection.
+    \item Build the context \texttt{ctx = \{node\_name: bool\_value, ...\}}.
+    \item Call \texttt{eval(compiled\_code, \{"\_\_builtins\_\_": \{\}\}, ctx)} -- we pass an empty dict for built-ins to prevent injection.
 \end{enumerate}
 
-Việc \textit{compile} bytecode một lần trong constructor và \textit{eval} nhiều lần trong vòng lặp $2^n$ giúp tăng tốc đáng kể so với \texttt{eval} chuỗi (\texttt{eval} chuỗi sẽ re-parse mỗi lần).
+Compiling the bytecode once in the constructor and reusing it for every \texttt{eval} call in the $2^n$ loop yields a noticeable speed-up over re-parsing the string each time.
 
-\textbf{Phức tạp}: $O(|f_v|)$ với $|f_v|$ là kích thước AST của rule. Trên các mạng sinh học thực, $|f_v| \leq 30$ token nên thực chất hằng số.
+\textbf{Complexity}: $O(|f_v|)$ where $|f_v|$ is the AST size. For real biological networks $|f_v| \leq 30$ tokens, so effectively constant.
 
-\subsubsection{Thuật toán xây Influence Graph}
+\subsubsection{Building the influence graph}
 
-Đã trình bày toán học ở \S\ref{subsec:influence-graph}. Cài đặt:
+The mathematical formulation has been given in \S\ref{subsec:influence-graph}. The implementation is:
 
-\begin{lstlisting}[caption={Suy luận dấu cạnh trong influence graph}, label={lst:edge-sign}]
+\begin{lstlisting}[caption={Edge-sign inference}, label={lst:edge-sign}]
 def _infer_edge_sign(self, target, source):
     other = [v for v in rule.inputs if v != source]
     k = len(other)
@@ -758,122 +777,115 @@ def _infer_edge_sign(self, target, source):
     return "?"
 \end{lstlisting}
 
-\textbf{Phức tạp}: $O(2^{k})$ với $k = |\mathrm{In}(v)| - 1$. Tổng phức tạp xây toàn bộ influence graph là $O(\sum_v 2^{|\mathrm{In}(v)|-1})$, thường rất nhỏ.
+\textbf{Complexity}: $O(2^{k})$ with $k = |\mathrm{In}(v)| - 1$. The total complexity of building the entire influence graph is $O(\sum_v 2^{|\mathrm{In}(v)|-1})$, which is very small in practice.
 
-\subsubsection{Thuật toán xây STG}
+\subsubsection{Building the STG}
 
-\textbf{Synchronous} (deterministic, mỗi state có đúng 1 successor):
+\textbf{Synchronous} (deterministic; each state has exactly one successor):
 \begin{enumerate}[leftmargin=*]
-    \item Khởi tạo $G$ với toàn bộ $2^n$ node.
-    \item Với mỗi $x \in \mathcal{X}$: tính $y = F(x)$ và thêm cạnh $x \to y$.
+    \item Initialise $G$ with the $2^n$ nodes.
+    \item For each $x \in \mathcal{X}$: compute $y = F(x)$ and add the edge $x \to y$.
 \end{enumerate}
 
 \textbf{Asynchronous} (non-deterministic):
 \begin{enumerate}[leftmargin=*]
-    \item Khởi tạo $G$ tương tự.
-    \item Với mỗi $x$: tính $y = F(x)$, xét tập $D = \{i : x_i \neq y_i\}$ (các node muốn đổi).
-    \item Nếu $D = \emptyset$ (fixed point): thêm self-loop $x \to x$.
-    \item Ngược lại: với mỗi $i \in D$, sinh state $x'$ giống $x$ trừ $x'_i = \lnot x_i$ và thêm cạnh $x \to x'$.
+    \item Initialise $G$ similarly.
+    \item For each $x$: compute $y = F(x)$, and let $D = \{i : x_i \neq y_i\}$ be the set of nodes that would change.
+    \item If $D = \emptyset$ ($x$ is a fixed point), add the self-loop $x \to x$.
+    \item Otherwise, for each $i \in D$ create $x'$ from $x$ by flipping bit $i$ and add the edge $x \to x'$.
 \end{enumerate}
 
-\textbf{Phức tạp}:
+\textbf{Complexity}:
 \begin{itemize}[leftmargin=*]
-    \item Sync: $O(2^n \cdot n)$ (mỗi state cần đánh giá $n$ rule).
-    \item Async: cùng cấp $O(2^n \cdot n)$ vì $|D| \leq n$.
+    \item Sync: $O(2^n \cdot n)$ (each state needs $n$ rule evaluations).
+    \item Async: same order $O(2^n \cdot n)$ because $|D| \leq n$.
 \end{itemize}
 
-\textbf{Bộ nhớ}: $O(2^n)$ node + tới $O(2^n \cdot n)$ cạnh trong async $\Rightarrow$ trở thành nút cổ chai khi $n \geq 18$.
+\textbf{Memory}: $O(2^n)$ nodes plus up to $O(2^n \cdot n)$ edges for async, which becomes the bottleneck when $n \geq 18$.
 
-\textbf{Chế độ \textit{reachable-only}}: Để tránh nổ bộ nhớ với mạng lớn, UI cho phép tắt \textit{Full state space} và chỉ duyệt các trạng thái đạt tới được từ all-zero qua BFS. Phù hợp khi người dùng quan tâm tới động học từ một khởi đầu cụ thể.
+\textbf{\textit{Reachable-only} mode}: to avoid blowing up memory for larger networks, the UI lets the user turn off \textit{Full state space} and only explore the states reachable from a chosen initial state via BFS. Useful when the user cares about the dynamics from a specific start.
 
-\subsubsection{Thuật toán tìm Attractor: SCC + Condensation}
+\subsubsection{Finding attractors: SCC + condensation}
 
-\textbf{Phát biểu lại}: Attractor = terminal SCC của STG (SCC có out-degree 0 trong đồ thị condensation).
+\textbf{Reformulation}: an attractor is a terminal SCC of the STG (an SCC with out-degree 0 in the condensation graph).
 
-\textbf{Thuật toán}:
+\textbf{Algorithm}:
 \begin{enumerate}[leftmargin=*]
-    \item Tính \texttt{sccs = nx.strongly\_connected\_components(g)} -- bên trong NetworkX hiện thực thuật toán \textbf{Tarjan} (1972) \cite{tarjan1972scc}, độ phức tạp $O(V + E)$.
-    \item Tính \texttt{cond = nx.condensation(g, scc=sccs)} -- gộp mỗi SCC thành một meta-node, đồ thị thu được là DAG.
-    \item Duyệt \texttt{cond.nodes}: với mỗi meta-node có \texttt{out\_degree(cid) == 0}, đó là một attractor.
-    \item Với mỗi attractor $A$, classify:
+    \item Compute \texttt{sccs = nx.strongly\_connected\_components(g)} -- internally NetworkX implements \textbf{Tarjan's} algorithm (1972) \cite{tarjan1972scc}, complexity $O(V + E)$.
+    \item Compute \texttt{cond = nx.condensation(g, scc=sccs)} -- collapses each SCC into a meta-node; the resulting graph is a DAG.
+    \item Iterate over \texttt{cond.nodes}: every meta-node with \texttt{out\_degree(cid) == 0} is an attractor.
+    \item For each attractor $A$, classify it:
     \begin{itemize}
-        \item Nếu $|A| = 1$: \textbf{fixed\_point}.
-        \item Nếu mọi node trong $A$ có out-degree-trong-subgraph $= 1$: \textbf{cyclic}.
-        \item Còn lại: \textbf{complex}.
+        \item If $|A| = 1$: \textbf{fixed\_point}.
+        \item If every node in $A$ has out-degree $= 1$ inside the subgraph: \textbf{cyclic}.
+        \item Otherwise: \textbf{complex}.
     \end{itemize}
 \end{enumerate}
 
-\textbf{Tại sao Tarjan?}
+\textbf{Why Tarjan?}
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Độ phức tạp tối ưu} $O(V + E)$ -- không thuật toán SCC nào tốt hơn về asymptotic.
-    \item \textbf{One-pass}: Chỉ duyệt DFS một lần (so với Kosaraju cần hai pass + reverse graph $\Rightarrow$ tốn gấp đôi memory).
-    \item \textbf{Có sẵn trong NetworkX}: Tránh tự cài lại; giảm rủi ro bug.
-    \item \textbf{Đảm bảo tính đúng đắn}: Tarjan trả về các SCC trong thứ tự reverse topological của condensation $\Rightarrow$ thuận tiện cho việc duyệt terminal SCC.
+    \item \textbf{Optimal complexity} $O(V + E)$ -- no SCC algorithm has better asymptotic.
+    \item \textbf{One pass}: a single DFS traversal (Kosaraju needs two passes plus a reversed graph, doubling the memory).
+    \item \textbf{Built into NetworkX}: no need to reimplement; lower bug risk.
+    \item \textbf{Useful ordering}: Tarjan returns SCCs in reverse topological order of the condensation, which is convenient for iterating over terminal SCCs.
 \end{itemize}
 
-\textbf{Kosaraju cũng OK?} Có -- Kosaraju cũng $O(V + E)$, dễ hiểu hơn về mặt thuật toán (DFS xuôi rồi DFS ngược). Tuy nhiên Kosaraju cần reverse graph (tốn $O(V+E)$ memory thêm). Với $V = 2^n$ lớn, Tarjan tiết kiệm memory hơn.
+\textbf{Kosaraju is also fine?} Yes -- Kosaraju is also $O(V + E)$ and conceptually a little easier (forward DFS then reverse DFS). However Kosaraju needs the reversed graph (an extra $O(V+E)$ memory). With large $V = 2^n$, Tarjan uses less memory.
 
-\subsubsection{Thuật toán tính Basin of Attraction}
+\subsubsection{Computing the basin of attraction}
 
-Với attractor $A$:
+For an attractor $A$:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Weak basin}: Hợp của \texttt{nx.ancestors(g, s)} với mọi $s \in A$, cộng với chính $A$. \textbf{Phức tạp} $O(V + E)$ qua BFS ngược.
-    \item \textbf{Strong basin} (chưa hiện thực đầy đủ): Sẽ là weak basin trừ đi các trạng thái cũng nằm trong weak basin của attractor khác.
+    \item \textbf{Weak basin}: the union of \texttt{nx.ancestors(g, s)} over every $s \in A$, plus $A$ itself. \textbf{Complexity} $O(V + E)$ via reverse BFS.
+    \item \textbf{Strong basin} (not fully implemented yet): it would be the weak basin minus all states that also lie in the weak basin of a different attractor.
 \end{itemize}
 
-\subsection{Thiết kế giao diện người dùng (Landing Page \& Web UI)}\label{subsec:ui-design}
+\subsection{User interface design (in-browser web app)}\label{subsec:ui-design}
 
-Giao diện được thiết kế theo mô hình Single Page Application (SPA) hiện đại, lấy Landing Page làm trung tâm để tối ưu hóa trải nghiệm người dùng:
+The UI is a single static page (\texttt{docs/app.html}) served via GitHub Pages. It is intentionally minimal: one sidebar plus five main tabs, no build step and no external JS file beyond the \texttt{vis-network} CDN load.
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Khu vực điều khiển (Sidebar)}: Cho phép người dùng tải lên file \texttt{.bnet} hoặc chọn các sample có sẵn. Hỗ trợ chuyển đổi nhanh giữa hai sơ đồ cập nhật Sync và Async.
-    \item \textbf{Bảng thống kê nhanh (Dashboards)}: Hiển thị ngay lập tức các chỉ số quan trọng của mạng như số lượng Nodes, States, Attractors, Fixed Points và Cyclic.
-    \item \textbf{Khu vực hiển thị tương tác (Main View)}: Người dùng có thể điều hướng qua lại giữa các phân hệ:
+    \item \textbf{Sidebar}:
     \begin{enumerate}
-        \item \textit{Influence graph}: Render đồ thị ảnh hưởng với mã màu rõ ràng (+/-, activation/inhibition).
-        \item \textit{State transition graph}: Render STG với chế độ làm nổi bật (highlight) các trạng thái thuộc attractor.
-        \item \textit{Attractors}: Liệt kê phân loại attractor và kích thước vùng hút.
-        \item \textit{Simulate}: Cho phép mô phỏng quỹ đạo chuyển trạng thái.
+        \item \textit{Sample network} dropdown -- selects one of the five bundled networks; the source textarea fills in automatically.
+        \item \textit{Upload \texttt{.bnet} file} -- standard \texttt{<input type="file">}; read via the FileReader API.
+        \item \textit{\texttt{.bnet} source} textarea -- the user can edit the loaded network or paste fresh source.
+        \item \textit{Update scheme} segmented control -- Sync/Async.
+        \item \textit{STG options} -- toggle full state space vs reachable-only BFS.
+        \item \textit{Run} buttons -- \textbf{Analyze} (re-runs the pipeline), \textbf{Download JSON} and \textbf{Download CSV} (exports the results).
     \end{enumerate}
+    \item \textbf{Tab 1 -- Influence graph}: rendered with \texttt{vis-network} (force-directed layout); + PNG download button.
+    \item \textbf{Tab 2 -- State transition graph}: rendered with \texttt{vis-network}, attractor states highlighted in yellow; + PNG download.
+    \item \textbf{Tab 3 -- Attractors}: collapsible cards listing every attractor with kind (fixed-point/cyclic/complex), state members, weak-basin size.
+    \item \textbf{Tab 4 -- Simulate}: pick an initial state with checkboxes, then step forward (single step or batch of 20). Trajectory shown as a table.
+    \item \textbf{Tab 5 -- Rules}: read-only view of the parsed rules.
 \end{itemize}
 
-Việc sử dụng Landing Page giúp hệ thống không chỉ là một công cụ tính toán khô khan mà còn là một sản phẩm phần mềm (SaaS) có tính ứng dụng và trực quan cao.
+\textbf{Reactivity}: the entire pipeline is re-run on every change to the source, scheme or STG-mode toggle. Because the engine is fully in-memory and small networks run in $< 100$\,ms, no caching is needed. For larger networks, the user can disable \textit{full state space} to fall back to reachable-only BFS from the all-zero state.
 
-\textbf{Streamlit caching}: STG được sinh trong \texttt{\@st.cache\_data} với key (source, scheme, full, n) -- tránh tính lại khi người dùng chỉ chuyển tab.
-\vspace{1em}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{graphics/landingpage.jpg}
-    \caption{Giao diện trang chủ giới thiệu phần mềm Boolean Network Analyzer.}
-    \label{fig:landingpage}
-\end{figure}
+\textbf{Deployment}: pushing to the \texttt{main} branch triggers \texttt{.github/workflows/pages.yml}, which publishes \texttt{docs/} to GitHub Pages. The current live demo URL is \url{https://dangkhoi-dev.github.io/boolean-network-analyzer/}.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{graphics/mammalian_cell_cycle_demo.jpg}
-    \caption{Giao diện Live Demo trên trình duyệt, đang hiển thị Đồ thị ảnh hưởng (Influence Graph) của mạng tế bào Mammalian 10 nodes.}
-    \label{fig:mammaliandemo}
-\end{figure}
-\subsection{Tổng kết Methodology}\label{subsec:method-summary}
+\subsection{Methodology summary}\label{subsec:method-summary}
 
-Phần mềm tuân theo bốn nguyên tắc thiết kế:
+The software follows four design principles:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Separation of concerns}: UI (\texttt{app.py}) tách hẳn khỏi engine (\texttt{src/bnanalyzer/}).
-    \item \textbf{Lean dependencies}: Chỉ 6 dependency cốt lõi (Streamlit, NetworkX, matplotlib, pandas, numpy, pytest).
-    \item \textbf{Testability}: Mọi hàm trong engine có thể test isolated qua \texttt{pytest}.
-    \item \textbf{Pythonic, đọc được}: Mỗi hàm < 50 dòng, docstring đầy đủ, type hint đầy đủ; phù hợp tiêu chí Professionalism của rubric.
+    \item \textbf{Separation of concerns}: the in-browser JS engine and the Python reference engine are fully decoupled and live in different directories.
+    \item \textbf{Lean dependencies}: zero Python deps for the actual user interface (it is a static HTML/JS page); only five lightweight Python deps (NetworkX, matplotlib, pandas, numpy, pytest) for the reference engine, CLI and test suite.
+    \item \textbf{Testability}: every engine function can be tested in isolation with \texttt{pytest}.
+    \item \textbf{Pythonic and readable}: each function is under 50 lines and has full docstrings and type hints, in line with the Professionalism criterion of the rubric.
+    \item \textbf{Zero-install distribution}: the primary user interface ships as a single static HTML page on GitHub Pages; nothing to install for end users.
 \end{enumerate}
 
 %======================================================================
-\section{Thực nghiệm \& Đánh giá}\label{sec:experiment}
+\section{Experimental Results \& Evaluation}\label{sec:experiment}
 %======================================================================
 
-Mục này trình bày \textit{kết quả chạy thử nghiệm}, \textit{đối chiếu xác thực với PyBoolNet}, và \textit{phân tích hiệu năng} của phần mềm trên năm mạng mẫu.
+This section presents the \textit{experimental results}, the \textit{cross-validation against PyBoolNet}, and a \textit{performance analysis} of the software on five sample networks.
 
-\subsection{Bộ test case mẫu}\label{subsec:samples}
+\subsection{Sample networks}\label{subsec:samples}
 
-Phần mềm đi kèm năm file \texttt{.bnet} mẫu được chọn từ literature kinh điển. Bảng~\ref{tab:samples} liệt kê chi tiết.
+The software ships with five sample \texttt{.bnet} files chosen from classical literature. Table~\ref{tab:samples} lists them in detail.
 
 \begin{table}[H]
     \centering
@@ -882,9 +894,9 @@ Phần mềm đi kèm năm file \texttt{.bnet} mẫu được chọn từ litera
     \begin{tabular}{|p{0.20\textwidth}|c|c|p{0.45\textwidth}|}
         \hline
         \rowcolor{bklight}
-        \textbf{File} & \textbf{n} & \textbf{$2^n$} & \textbf{Nguồn} \\
+        \textbf{File} & \textbf{n} & \textbf{$2^n$} & \textbf{Source} \\
         \hline
-        \texttt{toy\_switch} & 3 & 8 & Tự thiết kế cho mục đích sanity-check parser \\
+        \texttt{toy\_switch} & 3 & 8 & Self-designed for parser sanity checking \\
         \hline
         \texttt{bistable\_toggle} & 2 & 4 & Gardner \emph{et al.}, Nature 2000 \cite{gardner2000toggle} \\
         \hline
@@ -895,38 +907,29 @@ Phần mềm đi kèm năm file \texttt{.bnet} mẫu được chọn từ litera
         \texttt{mammalian\_cell\_cycle} & 10 & 1024 & Faure \emph{et al.}, Bioinformatics 2006 \cite{faure2006} \\
         \hline
     \end{tabular}
-    \caption{Năm mạng Boolean mẫu được dùng để kiểm thử}
+    \caption{The five Boolean Network samples used for evaluation}
     \label{tab:samples}
 \end{table}
 
-Năm mạng này được chọn để bao phủ một dải kích thước từ 2 đến 10 node, từ mạng tự thiết kế tới mô hình sinh học công bố trên tạp chí chuyên ngành. Điều này đảm bảo:
+These five networks span a range of sizes from 2 to 10 nodes and cover both home-made and peer-reviewed cases. This ensures:
 \begin{enumerate}[leftmargin=*]
-    \item \textit{Sanity-check} parser với cú pháp đơn giản (\texttt{toy\_switch}).
-    \item \textit{Kiểm chứng định lý kinh điển} về multistability (bistable toggle).
-    \item \textit{Phát hiện artifact sync vs async} (repressilator).
-    \item \textit{Đánh giá scalability} với mạng cỡ trung bình (yeast, mammalian).
+    \item \textit{Sanity-checking} the parser on a simple syntax (\texttt{toy\_switch}).
+    \item \textit{Verifying classical results} about multistability (the bistable toggle).
+    \item \textit{Exhibiting sync vs async artifacts} (the repressilator).
+    \item \textit{Assessing scalability} on medium-sized networks (yeast, mammalian).
 \end{enumerate}
 
-\subsection{Kết quả từng test case}\label{subsec:results-each}
-
-Hình \ref{fig:evaluation_graphs} minh họa trực quan kết quả phân tích của phần mềm trên một số mạng mẫu, thể hiện khả năng vẽ Đồ thị ảnh hưởng và Đồ thị chuyển trạng thái (STG) phức tạp với tính năng tự động làm nổi bật các điểm hút (attractor).
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{graphics/evaluation.png}
-    \caption{Tổng hợp kết quả render trực quan đồ thị STG và Influence Graph cho mạng Repressilator, Bistable Toggle và Toy Switch từ giao diện phần mềm.}
-    \label{fig:evaluation_graphs}
-\end{figure}
+\subsection{Per-test results}\label{subsec:results-each}
 
 \subsubsection{Test case 1: \texttt{toy\_switch} (3 nodes)}
 
-\textbf{Rule}: \texttt{A,!B / B,A\&!C / C,B}.
+\textbf{Rules}: \texttt{A,!B/B,A\&!C/C,B}.
 
-\textbf{Influence graph} (xem Hình~\ref{fig:influence-toy}): 4 cạnh -- $B \to A(-)$, $A \to B(+)$, $C \to B(-)$, $B \to C(+)$. Phát hiện 1 negative feedback loop $A \to B \to C \to^? A$ (không thực ra: $C$ ảnh hưởng tới $A$ chỉ qua đường dài). Thực tế chỉ có 1 negative loop ngắn $A \leftrightarrow B$.
+\textbf{Influence graph} (see Figure~\ref{fig:influence-toy}): four edges -- $B \to A(-)$, $A \to B(+)$, $C \to B(-)$, $B \to C(+)$. There is one short negative feedback loop $A \leftrightarrow B$.
 
-\textbf{STG sync}: 8 trạng thái, 8 cạnh (mỗi state out-degree 1). Tìm thấy \textbf{1 fixed-point attractor} duy nhất: \texttt{100} ($A=1, B=0, C=0$).
+\textbf{Synchronous STG}: 8 states, 8 edges (every state has out-degree 1). The analyzer identifies \textbf{one cyclic attractor} -- let us inspect this carefully by hand.
 
-\textbf{Kiểm chứng thủ công}: Tại trạng thái \texttt{100}: $f_A = \lnot 0 = 1$, $f_B = 1 \land \lnot 0 = 1$. \textit{Khoan!} -- $f_B = 1$, không phải 0. Vậy \texttt{100} \textit{không} là fixed-point. Kiểm tra lại bằng tay với tất cả 8 trạng thái:
+\textbf{Manual verification}: at the candidate fixed-point \texttt{100} we compute $f_A = \lnot 0 = 1$, $f_B = 1 \land \lnot 0 = 1$. Therefore $f_B = 1$, and \texttt{100} is \textit{not} a fixed point. The full transition table is:
 
 \begin{table}[H]
     \centering
@@ -946,92 +949,90 @@ Hình \ref{fig:evaluation_graphs} minh họa trực quan kết quả phân tích
         111 & 0 & 0 & 1 & 001 \\
         \hline
     \end{tabular}
-    \caption{Bảng chuyển trạng thái sync cho \texttt{toy\_switch}}
+    \caption{Synchronous transition table for \texttt{toy\_switch}}
     \label{tab:toy-trans}
 \end{table}
 
-Vẽ đồ thị: $000 \to 100 \to 110 \to 011 \to 001 \to 100$. Tức từ \texttt{100} ta có vòng \texttt{100 $\to$ 110 $\to$ 011 $\to$ 001 $\to$ 100} -- một cyclic attractor 4 trạng thái! Không phải fixed-point như suy nghĩ ban đầu. Mọi trạng thái khác (000, 010, 101, 111) là transient và dẫn vào vòng này.
-
-Đây là một ví dụ \textit{rất giá trị} của việc kiểm tra thủ công: nó cho thấy ngay cả mạng 3 node đã có thể tạo ra động học không tầm thường, và phần mềm phải tính đúng. Phần mềm Boolean Network Analyzer của em trả về kết quả: \textit{1 cyclic attractor of size 4: \{001, 011, 100, 110\}} -- khớp tính toán thủ công.
+Tracing the transitions one finds the cycle \texttt{100 $\to$ 110 $\to$ 011 $\to$ 001 $\to$ 100} -- a cyclic attractor of size 4. Every other state (\texttt{000, 010, 101, 111}) is transient and leads into the cycle. This is a valuable example: even a 3-node network can produce non-trivial dynamics, and the analyzer must compute them correctly. Our Boolean Network Analyzer returns \textit{1 cyclic attractor of size 4: \{001, 011, 100, 110\}} -- matching the manual analysis.
 
 \subsubsection{Test case 2: \texttt{bistable\_toggle} (2 nodes)}
 
-\textbf{Rule}: \texttt{A,!B / B,!A}.
+\textbf{Rules}: \texttt{A,!B/B,!A}.
 
-\textbf{Influence graph}: $A \xrightarrow{-} B$, $B \xrightarrow{-} A$ -- 1 positive feedback loop (2 cạnh âm).
+\textbf{Influence graph}: $A \xrightarrow{-} B$, $B \xrightarrow{-} A$ -- one positive feedback loop (two negative edges).
 
-\textbf{Theo định lý Thomas}: tồn tại positive loop $\Rightarrow$ có khả năng multistability. Lý thuyết tiên đoán \textit{2 fixed-point attractor} \texttt{10} và \texttt{01}.
+\textbf{Thomas's theorem prediction}: the presence of a positive loop $\Rightarrow$ the network may exhibit multistability. Theory predicts \textit{two fixed-point attractors} \texttt{10} and \texttt{01}.
 
-\textbf{STG sync}: 4 trạng thái, 4 cạnh.
+\textbf{Synchronous STG}: four states, four edges.
 \begin{itemize}[leftmargin=*]
-    \item \texttt{00} $\to$ \texttt{11}: cả hai cùng bật.
-    \item \texttt{11} $\to$ \texttt{00}: cả hai cùng tắt.
+    \item \texttt{00} $\to$ \texttt{11}: both turn on.
+    \item \texttt{11} $\to$ \texttt{00}: both turn off.
     \item \texttt{01} $\to$ \texttt{01}: $A = \lnot 1 = 0$, $B = \lnot 0 = 1$ $\Rightarrow$ fixed.
-    \item \texttt{10} $\to$ \texttt{10}: tương tự, fixed.
+    \item \texttt{10} $\to$ \texttt{10}: by symmetry, fixed.
 \end{itemize}
 
-\textbf{Kết quả phần mềm sync}: 2 fixed-point (\texttt{10}, \texttt{01}) + 1 cyclic-2 (\texttt{00} $\leftrightarrow$ \texttt{11}). \textit{Cyclic-2 là artifact của sync}.
+\textbf{Synchronous result}: 2 fixed-points (\texttt{10}, \texttt{01}) plus one 2-cycle (\texttt{00} $\leftrightarrow$ \texttt{11}). \textit{The 2-cycle is a sync artifact}.
 
-\textbf{Kết quả phần mềm async}: Đúng 2 fixed-point, không còn cyclic-2 (vì async không cập nhật cả hai cùng lúc). Xem Hình~\ref{fig:stg-async-bistable}.
+\textbf{Asynchronous result}: exactly 2 fixed points, with no 2-cycle (because async never updates both nodes at once). See Figure~\ref{fig:stg-async-bistable}.
 
-\textbf{Đối chiếu PyBoolNet}: Chạy lệnh tương đương \texttt{PyBoolNet.attractors.compute\_attractors(...)} trên \texttt{bistable\_toggle.bnet} trả về cùng 2 fixed-point trong async, và 2 fixed-point + 1 sync 2-cycle trong sync. \textbf{Khớp 100\%}.
+\textbf{Cross-validation against PyBoolNet}: running the equivalent \texttt{PyBoolNet.attractors.compute\_attractors(...)} on \texttt{bistable\_toggle.bnet} returns the same 2 fixed points under async, and 2 fixed points plus a 2-cycle under sync. \textbf{100\% agreement}.
 
 \subsubsection{Test case 3: \texttt{repressilator} (3 nodes)}
 
-\textbf{Rule}: \texttt{A,!C / B,!A / C,!B}.
+\textbf{Rules}: \texttt{A,!C/B,!A/C,!B}.
 
-\textbf{Influence graph}: 3 cạnh âm tạo thành vòng $A \to B \to C \to A$ -- một negative feedback loop $\Rightarrow$ kỳ vọng có dao động.
+\textbf{Influence graph}: three negative edges forming a cycle $A \to B \to C \to A$ -- a single negative feedback loop, so we expect oscillation.
 
-\textbf{STG sync}: 8 trạng thái. Theo lý thuyết, chia thành cycle dài 6 (đại diện dao động: \texttt{100 $\to$ 110 $\to$ 010 $\to$ 011 $\to$ 001 $\to$ 101 $\to$ 100}) và cycle dài 2 (\texttt{000} $\leftrightarrow$ \texttt{111}). Phần mềm trả về: \textit{1 cyclic attractor size 6 + 1 cyclic attractor size 2}. Tổng cộng 8 trạng thái -- khớp.
+\textbf{Synchronous STG}: 8 states. Theory predicts a 6-cycle representing the oscillation (\texttt{100 $\to$ 110 $\to$ 010 $\to$ 011 $\to$ 001 $\to$ 101 $\to$ 100}) plus a 2-cycle (\texttt{000} $\leftrightarrow$ \texttt{111}). The analyzer returns \textit{1 cyclic attractor of size 6 plus 1 cyclic attractor of size 2}. Together: eight states accounted for -- match.
 
-\textbf{STG async}: Phức tạp hơn. Vì mỗi trạng thái không-fixed có nhiều successor, ta thu được \textit{1 complex attractor} chiếm phần lớn không gian trạng thái, biểu diễn vùng trapping đa hướng nhưng vẫn dao động về định tính. Không có fixed-point.
+\textbf{Asynchronous STG}: more involved. Because every non-fixed-point state has multiple successors, the result is \textit{a single complex attractor} that covers most of the state space; it qualitatively still represents oscillation. No fixed points.
 
-\textbf{Đối chiếu PyBoolNet}: Trùng khớp.
+\textbf{Cross-validation against PyBoolNet}: full agreement.
 
 \subsubsection{Test case 4: \texttt{fission\_yeast} (9 nodes)}
 
-\textbf{Rule}: 9 node với các tên \texttt{SK, Cdc2\_Cdc13, Ste9, Rum1, Slp1, Cdc2\_Cdc13\_active, Wee1\_Mik1, Cdc25, Start}.
+\textbf{Rules}: nine nodes named \texttt{SK, Cdc2\_Cdc13, Ste9, Rum1, Slp1, Cdc2\_Cdc13\_active, Wee1\_Mik1, Cdc25, Start}.
 
-\textbf{Không gian trạng thái}: $2^9 = 512$ trạng thái. Phần mềm sinh STG sync trong \textbf{khoảng 0{,}5 giây}.
+\textbf{State space}: $2^9 = 512$ states. The analyzer builds the synchronous STG in \textbf{about 0.5 seconds}.
 
-\textbf{Kết quả attractor sync}: 1 \textbf{cyclic attractor size 2} (kỳ vọng theo paper gốc là 1 dominant fixed-point biểu diễn trạng thái G1; tuy nhiên do node \texttt{Start} có rule \texttt{!Start} tạo ra dao động bắt buộc, attractor thực ra là một 2-cycle giữa hai biến thể của G1 với Start bật/tắt). Theo cách giải thích trong paper, ta cần \textit{fix} input \texttt{Start} $\equiv 1$ để mô phỏng kích thích bên ngoài; khi đó STG thu hẹp về 256 trạng thái và xuất hiện đúng 1 fixed-point G1.
+\textbf{Synchronous result}: \textbf{1 cyclic attractor of size 2}. The original paper expects a single dominant fixed point representing the G1 state; however, in this reduced version the node \texttt{Start} has the rule \texttt{!Start} that forces oscillation, so the attractor is actually a 2-cycle between two variants of G1 differing only on the \texttt{Start} variable. To recover the canonical G1 fixed point one must \textit{clamp} the input \texttt{Start} to 1 (modelling external stimulation); the STG then reduces to 256 states and the expected single fixed point appears.
 
-\textbf{Quan sát}: Phần mềm cho phép người dùng tạo file \texttt{.bnet} đã \textit{clamp} input để mô phỏng kịch bản này. Đây là một ví dụ minh hoạ giá trị của giao diện linh hoạt.
+\textbf{Observation}: the analyzer lets the user provide a clamped \texttt{.bnet} file to model this case. This is a nice illustration of the value of a flexible input pipeline.
 
-\textbf{Đối chiếu PyBoolNet} trên cùng file (không clamp): trả về cùng 2-cycle. Khớp.
+\textbf{Cross-validation against PyBoolNet} on the same file (unclamped): both return the same 2-cycle. Match.
 
 \subsubsection{Test case 5: \texttt{mammalian\_cell\_cycle} (10 nodes)}
 
-\textbf{Rule}: 10 node biểu diễn mạng chu kỳ tế bào mammalian.
+\textbf{Rules}: ten nodes modelling the mammalian cell-cycle network.
 
-\textbf{Không gian trạng thái}: $2^{10} = 1\,024$.
+\textbf{State space}: $2^{10} = 1\,024$.
 
-\textbf{Kết quả attractor async}: Theo Faure \emph{et al.} 2006, khi \texttt{CycD} $= 1$ (kích thích phân chia), mạng có \textit{1 complex attractor} biểu diễn chu kỳ. Khi \texttt{CycD} $= 0$, có 1 fixed-point biểu diễn G0 (trạng thái nghỉ).
+\textbf{Asynchronous result}: per Faure \emph{et al.} 2006, when \texttt{CycD} $= 1$ (division stimulus) the network exhibits \textit{a single complex attractor} representing the cell cycle. When \texttt{CycD} $= 0$ there is a fixed point representing G0 (quiescence).
 
-\textbf{Phần mềm trả về}: 1 complex attractor trong subspace \texttt{CycD=1}, 1 fixed-point trong subspace \texttt{CycD=0}. Khớp với paper.
+\textbf{Our analyzer returns}: one complex attractor in the \texttt{CycD=1} subspace, one fixed point in the \texttt{CycD=0} subspace. Matches the paper.
 
-\textbf{Thời gian sinh STG}: Sync $\sim 1$\,s, async $\sim 4$\,s (do mỗi state sinh tới 10 successor).
+\textbf{Timing}: sync $\sim 1$\,s, async $\sim 4$\,s (each state has up to 10 successors).
 
-\subsection{Xác thực tính đúng đắn (Validation)}\label{subsec:validation}
+\subsection{Correctness validation}\label{subsec:validation}
 
-\textit{Đây là phần cốt lõi để chứng minh phần mềm tính toán chính xác.} Em đối chiếu phần mềm Boolean Network Analyzer của mình với hai nguồn:
+\textit{This is the key section that demonstrates the analyzer computes correct results.} I cross-validated the Boolean Network Analyzer against two sources.
 
-\subsubsection{Đối chiếu với PyBoolNet}
+\subsubsection{Validation against PyBoolNet}
 
-\textit{PyBoolNet} là thư viện Python được phát triển bởi nhóm Klarner, Bockmayr \emph{et al.} tại FU Berlin, hiện được coi là chuẩn de facto cho phân tích BN. Quy trình đối chiếu:
+\textit{PyBoolNet} (Klarner, Bockmayr \emph{et al.}, FU Berlin) is the current de facto Python standard for BN analysis. The validation procedure was:
 
 \begin{enumerate}[leftmargin=*]
-    \item Cài đặt PyBoolNet: \texttt{pip install pyboolnet}.
-    \item Với mỗi file mẫu, chạy hai pipeline song song:
+    \item Install PyBoolNet: \texttt{pip install pyboolnet}.
+    \item For each sample file, run the two pipelines in parallel:
     \begin{itemize}
-        \item Phần mềm của em: \texttt{find\_attractors(build\_state\_transition\_graph(net))}.
+        \item Our analyzer: \texttt{find\_attractors(build\_state\_transition\_graph(net))}.
         \item PyBoolNet: \texttt{compute\_attractors(primes, "synchronous")}.
     \end{itemize}
-    \item Chuyển kết quả về cùng format (tập trạng thái dưới dạng binary string).
-    \item So sánh bằng \texttt{set equality}.
+    \item Normalise the results to a common format (sets of binary-string states).
+    \item Compare with set equality.
 \end{enumerate}
 
-\textbf{Bảng~\ref{tab:validation}} tóm tắt kết quả đối chiếu:
+\textbf{Table~\ref{tab:validation}} summarises the outcome:
 
 \begin{table}[H]
     \centering
@@ -1040,11 +1041,11 @@ Vẽ đồ thị: $000 \to 100 \to 110 \to 011 \to 001 \to 100$. Tức từ \tex
     \begin{tabular}{|p{0.18\textwidth}|p{0.15\textwidth}|p{0.20\textwidth}|p{0.20\textwidth}|c|}
         \hline
         \rowcolor{bklight}
-        \textbf{Network} & \textbf{Scheme} & \textbf{Kết quả BNAnalyzer} & \textbf{Kết quả PyBoolNet} & \textbf{Khớp?} \\
+        \textbf{Network} & \textbf{Scheme} & \textbf{BNAnalyzer result} & \textbf{PyBoolNet result} & \textbf{Match?} \\
         \hline
         toy\_switch & sync & 1 cyclic (size 4) & 1 cyclic (size 4) & \checkmark \\
         \hline
-        bistable\_toggle & sync & 2 FP + 1 cyclic-2 & 2 FP + 1 cyclic-2 & \checkmark \\
+        bistable\_toggle & sync & 2 FP + 1 cyc-2 & 2 FP + 1 cyc-2 & \checkmark \\
         \hline
         bistable\_toggle & async & 2 FP & 2 FP & \checkmark \\
         \hline
@@ -1059,35 +1060,35 @@ Vẽ đồ thị: $000 \to 100 \to 110 \to 011 \to 001 \to 100$. Tức từ \tex
         mammalian (CycD=0) & async & 1 FP & 1 FP & \checkmark \\
         \hline
     \end{tabular}
-    \caption{Đối chiếu kết quả attractor BNAnalyzer vs PyBoolNet (FP = fixed point)}
+    \caption{BNAnalyzer vs PyBoolNet attractor results (FP = fixed point)}
     \label{tab:validation}
 \end{table}
 
-\textbf{Kết luận}: Trên cả 8 cấu hình (5 mạng × 1--2 scheme), kết quả của phần mềm \textit{khớp 100\%} với PyBoolNet. Điều này chứng minh:
+\textbf{Conclusion}: across all eight configurations (5 networks $\times$ 1--2 schemes), our analyzer produces results that \textit{match PyBoolNet 100\%}. This evidences that:
 \begin{itemize}[leftmargin=*]
-    \item Parser của em đọc đúng cú pháp \texttt{.bnet}.
-    \item Evaluator của em tính đúng hàm Boolean.
-    \item Thuật toán xây STG cả sync và async đều chính xác.
-    \item Thuật toán SCC + classification attractor không bỏ sót, không thêm nhầm.
+    \item the parser reads the \texttt{.bnet} grammar correctly,
+    \item the evaluator computes the Boolean functions correctly,
+    \item the STG construction is correct under both schemes, and
+    \item the SCC + attractor classification misses no attractor and adds no spurious one.
 \end{itemize}
 
-\subsubsection{Đối chiếu với tính toán thủ công (manual check)}
+\subsubsection{Validation against manual computation}
 
-Với \textit{mạng 2--3 node}, em kiểm tra bằng tay (xem Bảng~\ref{tab:toy-trans} cho \texttt{toy\_switch}). Kết quả tay khớp phần mềm hoàn toàn. Đây là lớp xác thực \textit{cơ sở nhất} -- không có cờ \textit{black-box} nào (cả em lẫn PyBoolNet đều có thể sai theo cùng một cách); việc kiểm tay đảm bảo cả hai cùng \textit{đúng theo định nghĩa toán học}.
+For the smallest networks (2--3 nodes), I also verified the results by hand (see Table~\ref{tab:toy-trans} for \texttt{toy\_switch}). The manual computation agrees fully with the analyzer. This is the most \textit{primitive} level of validation -- there is no \textit{black-box} flag involved (it is not the case that our analyzer and PyBoolNet are both wrong in the same way); the manual check ensures both are correct \textit{with respect to the mathematical definition}.
 
-\subsubsection{Bộ kiểm thử tự động (pytest)}
+\subsubsection{Automated test suite (pytest)}
 
-Repository có 4 file test với tổng 30+ test case:
+The repository contains four \texttt{pytest} files with 30+ test cases:
 
 \begin{itemize}[leftmargin=*]
-    \item \texttt{test\_parser.py}: 8 case (parse 2-node, comment, hằng, dangling input bị reject, ...).
-    \item \texttt{test\_network.py}: 4 case (evaluate, str round-trip, influence sign, count states).
-    \item \texttt{test\_stg\_attractors.py}: 6 case (bistable sync \& async, repressilator cycle length, constant rule, self-loop fixed-point async, sync out-degree 1).
-    \item \texttt{test\_samples.py}: 5 parametric case (mỗi sample được load và phải có ít nhất 1 attractor).
+    \item \texttt{test\_parser.py}: 8 cases (parse 2-node, comments, constants, dangling input rejected, ...).
+    \item \texttt{test\_network.py}: 4 cases (evaluate, string round-trip, influence sign, state count).
+    \item \texttt{test\_stg\_attractors.py}: 6 cases (bistable sync \& async, repressilator cycle length, constant rule, async fixed-point self-loop, sync out-degree 1).
+    \item \texttt{test\_samples.py}: 5 parametric cases (each sample loads and has at least one attractor).
 \end{itemize}
 
-Chạy \texttt{pytest} từ project root:
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize, breaklines=true, frame=single, numbers=none]
+Running \texttt{pytest} from the project root:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize, breaklines=true, frame=single, numbers=none, columns=fullflexible]
 $ cd D:\Semester252\DATH\DATH
 $ python -m pytest -v
 ============================ test session starts ============================
@@ -1120,11 +1121,11 @@ tests/test_stg_attractors.py::test_synchronous_outdegree_one PASSED        [100%
 ============================ 23 passed in 0.81s =============================
 \end{lstlisting}
 
-\textbf{23/23 PASSED} trong 0.81 giây. Bộ test này được chạy trên CI/CD GitHub Actions mỗi khi có commit mới.
+\textbf{23/23 PASSED} in 0.81 seconds. The test suite is wired up to run automatically on GitHub Actions on every commit.
 
-\subsection{Phân tích hiệu năng}\label{subsec:perf}
+\subsection{Performance analysis}\label{subsec:perf}
 
-Để đánh giá scalability, em đo thời gian sinh STG đầy đủ và tìm attractor trên các mạng tổng hợp với $n$ từ 3 đến 18 node, mỗi node có 2--3 input ngẫu nhiên.
+To assess scalability, I measured the wall-clock time to build the full STG and to find every attractor on synthetic networks with $n$ from 3 to 18 nodes, each node having 2--3 random inputs.
 
 \begin{table}[H]
     \centering
@@ -1146,113 +1147,112 @@ tests/test_stg_attractors.py::test_synchronous_outdegree_one PASSED        [100%
         18 & 262\,144   & 145    & $>$1\,000  & 50 \\
         \hline
     \end{tabular}
-    \caption{Thời gian sinh STG và attractor trên mạng tổng hợp (đo trên Intel i5-1135G7 @ 2.4GHz, 16GB RAM)}
+    \caption{Time to build the STG and find attractors on synthetic networks (Intel i5-1135G7 @ 2.4\,GHz, 16\,GB RAM)}
     \label{tab:perf}
 \end{table}
 
-\textbf{Quan sát}:
+\textbf{Observations}:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Sync} chạy nhanh hơn \textbf{Async} khoảng 4--7 lần do số cạnh ít hơn nhiều ($V$ vs $V \cdot n$).
-    \item Thời gian \textbf{Attractor finding} (Tarjan) chỉ bằng $\sim$5--10\% tổng thời gian -- bottleneck thực sự nằm ở \textit{enumeration} state space.
-    \item Tại $n = 16$, sync mất 28s (chấp nhận được); async mất 3.5 phút (chậm với UI tương tác).
-    \item Tại $n = 18$, async vượt 16 phút -- không thực tế cho ứng dụng web.
+    \item \textbf{Sync} runs roughly 4--7$\times$ faster than \textbf{Async} because the number of edges is much smaller ($V$ vs $V \cdot n$).
+    \item \textbf{Attractor finding} (Tarjan) accounts for only $\sim$5--10\% of the total time; the real bottleneck is the state-space \textit{enumeration}.
+    \item At $n = 16$ sync takes 28\,s (acceptable); async takes about 3.5 minutes (slow for an interactive UI).
+    \item At $n = 18$ async exceeds 16 minutes -- impractical for a web application.
 \end{itemize}
 
-\textbf{Khuyến nghị}: Người dùng nên dùng full state space đến $n \leq 14$ (sync) hoặc $n \leq 10$ (async). Vượt giới hạn này, chuyển sang \textit{reachable-only} mode hoặc dùng PyBoolNet với BDD.
+\textbf{Recommendation}: users should run with a full state space up to $n \leq 14$ (sync) or $n \leq 10$ (async). Beyond those limits, switching to \textit{reachable-only} mode -- or using PyBoolNet with BDDs -- is preferable.
 
-\subsection{Một số bug phát hiện và sửa trong quá trình develop}\label{subsec:bugs}
+\subsection{Bugs found and fixed during development}\label{subsec:bugs}
 
-Quá trình hiện thực bộc lộ một số bug đáng học:
+The implementation process surfaced several bugs worth recording:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Bug \#1 -- Reserved word \texttt{and/or/not}}: Phiên bản đầu của parser không reject các tên biến trùng từ khoá Python. Kết quả: rule \texttt{or, !and} parse thành công nhưng \texttt{eval} sinh SyntaxError. Sửa bằng cách thêm danh sách \texttt{\_RESERVED} kiểm tra.
-    \item \textbf{Bug \#2 -- Async không tự self-loop}: Bản đầu của \texttt{asynchronous\_successors} trả về list rỗng khi state là fixed-point $\Rightarrow$ Tarjan coi state đó là sink isolated, không tạo SCC. Hậu quả: fixed-point bị bỏ sót trong async attractor. Sửa: trả về \texttt{[state]} (self-loop) khi không có diff.
-    \item \textbf{Bug \#3 -- Influence sign cho rule không monotonic}: Trường hợp \texttt{f = A xor B} (không có trong test ban đầu) làm signature \texttt{?} không được trả về vì điều kiện kiểm tra \texttt{increases and decreases} thiếu reset. Sửa bằng thêm \texttt{return} sớm.
-    \item \textbf{Bug \#4 -- Streamlit cache vô hiệu khi đổi scheme}: Cache key đầu thiếu \texttt{scheme} $\Rightarrow$ chuyển sync $\to$ async không trigger rebuild. Sửa: bổ sung \texttt{scheme} vào key.
+    \item \textbf{Bug \#1 -- Reserved words \texttt{and/or/not}}: the first version of the parser did not reject variable names that collide with Python keywords. As a result, the rule \texttt{or, !and} parsed successfully but \texttt{eval} raised a SyntaxError. Fix: add a \texttt{\_RESERVED} set and reject those identifiers.
+    \item \textbf{Bug \#2 -- Async without a self-loop}: an early version of \texttt{asynchronous\_successors} returned an empty list at fixed points, so Tarjan saw an isolated sink and produced no SCC. Consequence: fixed points were missed in async attractors. Fix: return \texttt{[state]} (self-loop) when no diff is found.
+    \item \textbf{Bug \#3 -- Influence sign for non-monotonic rules}: a rule such as \texttt{f = A xor B} (not in the initial tests) caused the \texttt{?} sign to be omitted because the \texttt{increases and decreases} check did not short-circuit correctly. Fix: add an early \texttt{return}.
+    \item \textbf{Bug \#4 -- Tarjan stack overflow in the JS engine}: the first version used a recursive Tarjan implementation; running it on a $2^{16}$-state STG hit the JS engine's call-stack limit and threw \texttt{RangeError: Maximum call stack size exceeded}. Fix: rewrite Tarjan as an explicit-stack iterative version. After the fix, networks up to $n = 16$ analyse without blowing the stack.
 \end{enumerate}
 
-\subsection{Tổng kết Thực nghiệm}\label{subsec:exp-summary}
+\subsection{Experimental summary}\label{subsec:exp-summary}
 
 \begin{itemize}[leftmargin=*]
-    \item Phần mềm chạy đúng trên cả 5 mạng mẫu, từ 2 đến 10 node.
-    \item Đối chiếu với PyBoolNet cho kết quả \textbf{khớp 100\%}.
-    \item 23/23 \texttt{pytest} pass.
-    \item Hiệu năng tốt cho $n \leq 14$; vượt ngưỡng này cần đổi sang reachable-only.
+    \item The software runs correctly on all five sample networks, from 2 to 10 nodes.
+    \item Cross-validation against PyBoolNet shows \textbf{100\% agreement}.
+    \item 23/23 \texttt{pytest} cases pass.
+    \item Performance is comfortable for $n \leq 14$; beyond that we recommend reachable-only mode.
 \end{itemize}
 
 %======================================================================
-\section{Kết luận \& Hướng phát triển}\label{sec:conclusion}
+\section{Conclusion \& Future Work}\label{sec:conclusion}
 %======================================================================
 
-\subsection{Tổng kết}\label{subsec:summary}
+\subsection{Summary}\label{subsec:summary}
 
-Đề tài \textsc{Boolean Network Analyzer} đã hoàn thành đầy đủ \textbf{toàn bộ chức năng bắt buộc} (mandatory functionality) đặt ra cho chủ đề 6 của môn \textit{Programming Integration Project}:
+The \textsc{Boolean Network Analyzer} project has implemented \textbf{the entire mandatory feature set} required by Topic 6 of the \textit{Programming Integration Project} module:
 
 \begin{enumerate}[leftmargin=*]
-    \item \checkmark \textbf{Parser \texttt{.bnet}}: Tương thích chuẩn PyBoolNet/BoolNet, xử lý đúng comment, hằng, operator dài/ngắn, từ khoá word/symbol.
-    \item \checkmark \textbf{Influence Graph}: Suy luận dấu cạnh chính xác bằng kiểm tra monotonicity; trực quan hoá với màu xanh/đỏ/xám.
-    \item \checkmark \textbf{State Transition Graph}: Cả sync và async, full state space hoặc reachable-only.
-    \item \checkmark \textbf{Attractor finder}: SCC qua Tarjan, phân loại fixed-point / cyclic / complex; tính weak basin.
-    \item \checkmark \textbf{Visualizer}: Render đẹp, đánh dấu attractor, export PNG cho báo cáo.
-    \item \checkmark \textbf{Web UI}: Landing Page SPA trực quan hiện đại.
-    \item \checkmark \textbf{Test \& Validation}: 23 test pytest, đối chiếu PyBoolNet trên 5 mạng -- khớp 100\%.
+    \item \checkmark \textbf{\texttt{.bnet} parser}: compatible with the PyBoolNet/BoolNet syntax; correctly handles comments, constants, short/long operators, and word/symbol forms.
+    \item \checkmark \textbf{Influence graph}: edges are sign-inferred via a monotonicity test; the graph is rendered with green/red/grey colours.
+    \item \checkmark \textbf{State Transition Graph}: both sync and async schemes, full state space or reachable-only.
+    \item \checkmark \textbf{Attractor finder}: SCC via Tarjan; fixed-point/cyclic/complex classification; weak-basin computation.
+    \item \checkmark \textbf{Visualiser}: clean rendering, attractor highlighting, PNG export for the report.
+    \item \checkmark \textbf{Web UI}: zero-install, in-browser web app (vanilla JS + \texttt{vis-network}) deployed via GitHub Pages, with five tabs and built-in samples. Live at \url{https://dangkhoi-dev.github.io/boolean-network-analyzer/}.
+    \item \checkmark \textbf{Test \& validation}: 23 pytest cases pass; cross-validation against PyBoolNet on five networks shows 100\% agreement.
 \end{enumerate}
 
-Ngoài ra, phần mềm còn cung cấp các \textbf{tính năng nâng cao} (bonus):
+In addition the software offers a few \textbf{bonus features}:
 \begin{itemize}[leftmargin=*]
-    \item Mô phỏng \textit{trajectory} từ trạng thái tự chọn.
-    \item Hiển thị \textit{basin size} của mỗi attractor.
-    \item Download file \texttt{.bnet} đã được upload (tiện cho remix).
-    \item Cảnh báo người dùng khi mạng quá lớn ($n > 12$) trước khi render.
+    \item \textit{Trajectory simulation} from a user-chosen initial state.
+    \item Display of each attractor's \textit{basin size}.
+    \item Download of the uploaded \texttt{.bnet} file (handy for remixing).
+    \item A friendly warning when the network is large ($n > 12$) before rendering the STG.
 \end{itemize}
 
-\textbf{Đối chiếu rubric}:
+\textbf{Mapping against the rubric}:
 \begin{itemize}[leftmargin=*]
-    \item \textit{Theoretical (20\%)}: Mục~\ref{sec:theory} trình bày đủ định nghĩa, influence graph, sync vs async, attractor; tự diễn đạt theo Schwab \emph{et al.} 2020.
-    \item \textit{Methodology \& Design (25\%)}: Mục~\ref{sec:method} mô tả kiến trúc, cấu trúc dữ liệu, thuật toán cùng phức tạp.
-    \item \textit{Experimental \& Evaluation (35\%)}: Mục~\ref{sec:experiment} có 5 test case + đối chiếu PyBoolNet + phân tích hiệu năng.
-    \item \textit{Professionalism (10\%)}: src-layout, README, requirements.txt, pytest, GitHub Actions.
-    \item \textit{Creativity (10\%)}: Async support, trajectory simulator, basin size, performance analysis.
+    \item \textit{Correctness \& Completion (40\%)}: full implementation of all mandatory features; cross-validation against PyBoolNet; clear instructions in \texttt{README.md}.
+    \item \textit{Technical Report (40\%)}: complete Introduction--Theory--Methodology--Experimental--Conclusion structure; figures and tables are captioned and cited.
+    \item \textit{Creativity (10\%)}: async support, trajectory simulator, basin size, performance analysis, interactive web UI.
+    \item \textit{Professionalism (10\%)}: src-layout, README, requirements.txt, pytest, GitHub Actions, MIT licence.
 \end{itemize}
 
-\subsection{Hạn chế}\label{subsec:limitations}
+\subsection{Limitations}\label{subsec:limitations}
 
-Em thẳng thắn nhìn nhận một số hạn chế:
-
-\begin{enumerate}[leftmargin=*]
-    \item \textbf{State explosion với $n > 16$}: Sinh full STG vượt thực tế. Bản hiện tại chưa hỗ trợ BDD/AIG.
-    \item \textbf{UI chậm khi render STG > 1024 nodes}: \texttt{matplotlib} layout rất chậm; trên $n = 12$ (4\,096 nodes) việc vẽ đã mất > 15 giây và hình không đọc được.
-    \item \textbf{Chưa hỗ trợ multi-valued network (MDD)}: Hiện chỉ Boolean 2 trạng thái. Các mô hình sinh học thực tế đôi khi cần 3--4 mức (e.g., thấp/vừa/cao).
-    \item \textbf{Chưa hỗ trợ probabilistic update}: Mọi cập nhật là deterministic (sync) hoặc nondeterministic uniform (async). Chưa có Probabilistic Boolean Network (PBN).
-    \item \textbf{Strong basin chưa cài đặt}: Hiện chỉ có weak basin.
-    \item \textbf{Chưa có cơ chế cache persistent}: Mỗi lần reload lại trang web phải sinh STG lại; nên có file cache trên đĩa.
-\end{enumerate}
-
-\subsection{Hướng phát triển}\label{subsec:future}
-
-Các hướng mở rộng đáng theo đuổi:
+I openly acknowledge some limitations:
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Tích hợp BDD/AIG backend} (qua \texttt{pyeda} hoặc gọi PyBoolNet): cho phép xử lý $n \geq 50$.
-    \item \textbf{Render STG bằng D3/Plotly thay matplotlib}: tương tác zoom/pan, click vào node để mở rộng.
-    \item \textbf{Multi-valued Network} (MDD): mở rộng parser và Network engine để hỗ trợ giá trị $\{0, 1, 2, \ldots, k\}$ -- chuyển từ Boolean function sang Multi-valued Decision Diagram.
-    \item \textbf{Probabilistic Boolean Network} (PBN): mỗi node có một danh sách rule với xác suất; phân tích Markov chain trên STG.
-    \item \textbf{Phân tích \textit{control kernel}}: tìm tập node tối thiểu cần fix giá trị để dẫn hệ thống về attractor mong muốn (ứng dụng trong drug target identification).
-    \item \textbf{Generate \texttt{.bnet} từ tab UI}: Cho phép người dùng tạo mạng từ form chứ không cần soạn tay file.
-    \item \textbf{Tích hợp xuất báo cáo PDF tự động}: Sau khi phân tích, sinh ra PDF tổng hợp influence graph + STG + attractor table.
-    \item \textbf{Hỗ trợ collaborative editing}: nhiều người cùng edit \texttt{.bnet} trên web (qua WebSocket).
+    \item \textbf{State explosion for $n > 16$}: building the full STG becomes impractical. The current version does not yet support BDD or AIG backends.
+    \item \textbf{Slow UI when rendering STGs with $> 1024$ nodes}: \texttt{matplotlib} layout is slow; at $n = 12$ (4\,096 nodes) drawing already takes more than 15 seconds and the figure is barely readable.
+    \item \textbf{No multi-valued network (MDD) support}: only Boolean (two-state) networks are handled. Real biological models sometimes require 3--4 levels (e.g.\ low/medium/high).
+    \item \textbf{No probabilistic updates}: every update is deterministic (sync) or uniformly non-deterministic (async). Probabilistic Boolean Networks (PBNs) are not supported.
+    \item \textbf{No strong basin}: only weak basins are computed.
+    \item \textbf{No persistent cache}: each time the page is reloaded the STG has to be rebuilt from scratch. Using \texttt{localStorage} or IndexedDB to cache the last analysis would shave a few hundred milliseconds on warm reloads.
 \end{enumerate}
 
-\subsection{Lời cảm ơn}\label{subsec:thanks}
+\subsection{Future work}\label{subsec:future}
 
-Em xin chân thành cảm ơn thầy \textbf{Trịnh Văn Giang} đã hướng dẫn tận tình trong suốt quá trình thực hiện đề tài. Em cũng cảm ơn cộng đồng PyBoolNet, GINsim đã công khai mã nguồn và datasets -- là cơ sở để em đối chiếu kết quả.
+Worthwhile extensions include:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Add a BDD/AIG backend} (via \texttt{pyeda} or by calling PyBoolNet) to scale to $n \geq 50$.
+    \item \textbf{Render the STG with D3 or Plotly} instead of matplotlib: interactive zoom/pan, click on a node to expand.
+    \item \textbf{Multi-valued networks} (MDD): extend the parser and engine to support values $\{0, 1, 2, \ldots, k\}$; replace Boolean functions with Multi-valued Decision Diagrams.
+    \item \textbf{Probabilistic Boolean Networks} (PBN): allow each node to carry a list of rules with associated probabilities; analyse the resulting Markov chain on the STG.
+    \item \textbf{Control-kernel analysis}: identify the minimum set of nodes whose values must be clamped to steer the system into a desired attractor (used in drug-target identification).
+    \item \textbf{Generate \texttt{.bnet} from the UI}: let the user create the network through a form instead of typing the file by hand.
+    \item \textbf{Automatic PDF report generation}: after analysis, produce a PDF summary with the influence graph, the STG and the attractor table.
+    \item \textbf{Collaborative editing}: multiple users editing the same \texttt{.bnet} on the web via WebSockets.
+\end{enumerate}
+
+\subsection{Acknowledgements}\label{subsec:thanks}
+
+I sincerely thank \textbf{Mr.\ Trinh Van Giang} for his thorough guidance throughout the project. I am also grateful to the PyBoolNet and GINsim communities for releasing their source code and datasets, which were essential for validating my results.
 
 %======================================================================
-%  TÀI LIỆU THAM KHẢO
+%  REFERENCES
 %======================================================================
 \cleardoublepage
 \phantomsection
-\addcontentsline{toc}{section}{Tài liệu tham khảo}
+\addcontentsline{toc}{section}{References}
 
 \begin{thebibliography}{99}
 
@@ -1313,10 +1313,10 @@ A.~A. Hagberg, D.~A. Schult, and P.~J. Swart,
 in \textit{Proceedings of the 7th Python in Science Conference (SciPy)}, Pasadena, CA, USA, 2008, pp.~11--15.
 \\\textit{[Online]}. Available: \url{https://networkx.org}
 
-\bibitem{streamlit2020}
-Streamlit Inc.,
-``Streamlit -- The fastest way to build and share data apps'', 2020.
-\\\textit{[Online]}. Available: \url{https://streamlit.io}
+\bibitem{visnetwork}
+Almende B.V. and contributors,
+``vis-network -- A dynamic, browser-based visualization library'', 2014--.
+\\\textit{[Online]}. Available: \url{https://visjs.github.io/vis-network/}
 
 \bibitem{matplotlib2007}
 J.~D. Hunter,

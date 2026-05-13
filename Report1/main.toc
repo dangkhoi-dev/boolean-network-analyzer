@@ -1,74 +1,74 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{Tóm tắt}{i}{section*.1}%
-\contentsline {section}{Danh sách hình vẽ}{vi}{section*.4}%
-\contentsline {section}{Danh sách bảng}{vii}{section*.6}%
-\contentsline {section}{\numberline {1}Giới thiệu}{1}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Bối cảnh}{1}{subsection.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.1}Mạng Boolean trong khoa học hệ thống}{1}{subsubsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.2}Ứng dụng của Boolean Network}{1}{subsubsection.1.1.2}%
-\contentsline {subsubsection}{\numberline {1.1.3}Khoảng trống công cụ và động lực}{2}{subsubsection.1.1.3}%
-\contentsline {subsection}{\numberline {1.2}Mục tiêu dự án}{2}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Phạm vi đề tài}{3}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Đóng góp chính}{3}{subsection.1.4}%
-\contentsline {subsection}{\numberline {1.5}Cấu trúc báo cáo}{4}{subsection.1.5}%
-\contentsline {section}{\numberline {2}Cơ sở lý thuyết}{4}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Định nghĩa toán học của Boolean Network}{4}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Định nghĩa hình thức}{4}{subsubsection.2.1.1}%
-\contentsline {subsubsection}{\numberline {2.1.2}Biểu diễn rule trong định dạng \texttt {.bnet}}{5}{subsubsection.2.1.2}%
-\contentsline {subsubsection}{\numberline {2.1.3}Ví dụ minh hoạ: mạng \textit {toy switch} 3 node}{5}{subsubsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.2}Đồ thị ảnh hưởng (Influence Graph)}{6}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Định nghĩa}{6}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Suy luận dấu cạnh}{7}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}Ví dụ minh hoạ}{7}{subsubsection.2.2.3}%
-\contentsline {subsubsection}{\numberline {2.2.4}Vai trò của Influence Graph}{8}{subsubsection.2.2.4}%
-\contentsline {subsection}{\numberline {2.3}Sơ đồ cập nhật: Synchronous vs Asynchronous}{8}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Sơ đồ Synchronous}{9}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Sơ đồ Asynchronous}{9}{subsubsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.3}Ví dụ so sánh: bistable toggle 2 node}{10}{subsubsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.4}State Transition Graph (STG)}{11}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Định nghĩa}{11}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Kích thước và biểu diễn}{11}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Ví dụ: STG synchronous của \textit {repressilator}}{12}{subsubsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.5}Attractor: Point \& Cyclic \& Complex}{13}{subsection.2.5}%
-\contentsline {subsubsection}{\numberline {2.5.1}Định nghĩa}{13}{subsubsection.2.5.1}%
-\contentsline {subsubsection}{\numberline {2.5.2}Phân loại attractor}{13}{subsubsection.2.5.2}%
-\contentsline {subsubsection}{\numberline {2.5.3}Vùng hút (Basin of Attraction)}{14}{subsubsection.2.5.3}%
-\contentsline {subsubsection}{\numberline {2.5.4}Ý nghĩa sinh học và kỹ thuật}{14}{subsubsection.2.5.4}%
-\contentsline {subsection}{\numberline {2.6}Đối chiếu với các công cụ chuẩn}{15}{subsection.2.6}%
-\contentsline {section}{\numberline {3}Phương pháp \& Thiết kế hệ thống}{15}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Kiến trúc tổng thể}{15}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Tổ chức source code và package layout}{17}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Cấu trúc dữ liệu trong bộ nhớ}{18}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}ParsedRule}{18}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}State}{18}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}Graphs: NetworkX DiGraph}{19}{subsubsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.4}Thuật toán cốt lõi}{19}{subsection.3.4}%
-\contentsline {subsubsection}{\numberline {3.4.1}Thuật toán Parser}{19}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}Thuật toán Evaluate (network)}{19}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {3.4.3}Thuật toán xây Influence Graph}{20}{subsubsection.3.4.3}%
-\contentsline {subsubsection}{\numberline {3.4.4}Thuật toán xây STG}{20}{subsubsection.3.4.4}%
-\contentsline {subsubsection}{\numberline {3.4.5}Thuật toán tìm Attractor: SCC + Condensation}{21}{subsubsection.3.4.5}%
-\contentsline {subsubsection}{\numberline {3.4.6}Thuật toán tính Basin of Attraction}{22}{subsubsection.3.4.6}%
-\contentsline {subsection}{\numberline {3.5}Thiết kế giao diện người dùng (Landing Page \& Web UI)}{22}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Tổng kết Methodology}{24}{subsection.3.6}%
-\contentsline {section}{\numberline {4}Thực nghiệm \& Đánh giá}{24}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Bộ test case mẫu}{24}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Kết quả từng test case}{25}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Test case 1: \texttt {toy\_switch} (3 nodes)}{26}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Test case 2: \texttt {bistable\_toggle} (2 nodes)}{26}{subsubsection.4.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.3}Test case 3: \texttt {repressilator} (3 nodes)}{27}{subsubsection.4.2.3}%
-\contentsline {subsubsection}{\numberline {4.2.4}Test case 4: \texttt {fission\_yeast} (9 nodes)}{27}{subsubsection.4.2.4}%
-\contentsline {subsubsection}{\numberline {4.2.5}Test case 5: \texttt {mammalian\_cell\_cycle} (10 nodes)}{28}{subsubsection.4.2.5}%
-\contentsline {subsection}{\numberline {4.3}Xác thực tính đúng đắn (Validation)}{28}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}Đối chiếu với PyBoolNet}{28}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}Đối chiếu với tính toán thủ công (manual check)}{29}{subsubsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.3}Bộ kiểm thử tự động (pytest)}{30}{subsubsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.4}Phân tích hiệu năng}{31}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Một số bug phát hiện và sửa trong quá trình develop}{32}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Tổng kết Thực nghiệm}{32}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Kết luận \& Hướng phát triển}{32}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Tổng kết}{32}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Hạn chế}{34}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Hướng phát triển}{34}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Lời cảm ơn}{35}{subsection.5.4}%
-\contentsline {section}{Tài liệu tham khảo}{36}{section*.24}%
+\contentsline {section}{Abstract}{i}{section*.1}%
+\contentsline {section}{List of Figures}{vi}{section*.4}%
+\contentsline {section}{List of Tables}{vii}{section*.6}%
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Background}{1}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Boolean Networks in systems science}{1}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Applications of Boolean Networks}{1}{subsubsection.1.1.2}%
+\contentsline {subsubsection}{\numberline {1.1.3}Tooling gap and motivation}{2}{subsubsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.2}Project objectives}{2}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Project scope}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Main contributions}{4}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Report structure}{5}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Theoretical Background}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Mathematical definition of a Boolean Network}{6}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Formal definition}{6}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}The \texttt {.bnet} rule format}{6}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}Illustrative example: a 3-node \textit {toy switch}}{6}{subsubsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.2}The influence graph}{7}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Definition}{7}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Inferring the edge sign}{8}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Worked example}{8}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Role of the influence graph}{9}{subsubsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.3}Update schemes: synchronous vs asynchronous}{9}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Synchronous scheme}{10}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Asynchronous scheme}{10}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}A side-by-side comparison: the 2-node bistable toggle}{11}{subsubsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.4}The State Transition Graph (STG)}{12}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Definition}{12}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Size and representation}{12}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Example: synchronous STG of the \textit {repressilator}}{13}{subsubsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.5}Attractors: point, cyclic and complex}{14}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Definition}{14}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Classification of attractors}{14}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Basin of attraction}{15}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Biological and engineering meaning}{15}{subsubsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.6}Comparison with reference tools}{16}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Methodology \& System Design}{16}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Overall architecture}{16}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Source code layout}{18}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}In-memory data structures}{20}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}ParsedRule}{20}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}State}{20}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Graphs: NetworkX DiGraph}{21}{subsubsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.4}Core algorithms}{21}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Parser}{21}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Evaluation}{22}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Building the influence graph}{22}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Building the STG}{22}{subsubsection.3.4.4}%
+\contentsline {subsubsection}{\numberline {3.4.5}Finding attractors: SCC + condensation}{23}{subsubsection.3.4.5}%
+\contentsline {subsubsection}{\numberline {3.4.6}Computing the basin of attraction}{24}{subsubsection.3.4.6}%
+\contentsline {subsection}{\numberline {3.5}User interface design (in-browser web app)}{24}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Methodology summary}{25}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Experimental Results \& Evaluation}{26}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Sample networks}{26}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Per-test results}{27}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Test case 1: \texttt {toy\_switch} (3 nodes)}{27}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Test case 2: \texttt {bistable\_toggle} (2 nodes)}{27}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}Test case 3: \texttt {repressilator} (3 nodes)}{28}{subsubsection.4.2.3}%
+\contentsline {subsubsection}{\numberline {4.2.4}Test case 4: \texttt {fission\_yeast} (9 nodes)}{28}{subsubsection.4.2.4}%
+\contentsline {subsubsection}{\numberline {4.2.5}Test case 5: \texttt {mammalian\_cell\_cycle} (10 nodes)}{29}{subsubsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.3}Correctness validation}{29}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Validation against PyBoolNet}{29}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Validation against manual computation}{30}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Automated test suite (pytest)}{31}{subsubsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.4}Performance analysis}{32}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Bugs found and fixed during development}{33}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Experimental summary}{33}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Conclusion \& Future Work}{33}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Summary}{33}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Limitations}{35}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Future work}{35}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Acknowledgements}{36}{subsection.5.4}%
+\contentsline {section}{References}{37}{section*.21}%

@@ -1,10 +1,10 @@
 \babel@toc {english}{}\relax 
-\contentsline {table}{\numberline {1.1}{\ignorespaces Phạm vi triển khai của đề tài Boolean Network Analyzer}}{3}{table.caption.8}%
-\contentsline {table}{\numberline {2.1}{\ignorespaces Sync vs Async cho mạng bistable toggle}}{10}{table.caption.10}%
-\contentsline {table}{\numberline {2.2}{\ignorespaces Tăng trưởng kích thước STG theo $n$}}{12}{table.caption.12}%
-\contentsline {table}{\numberline {2.3}{\ignorespaces So sánh các công cụ phân tích Boolean Network}}{15}{table.caption.14}%
-\contentsline {table}{\numberline {3.1}{\ignorespaces Bảng chuyển token .bnet $\to $ Python}}{19}{table.caption.16}%
-\contentsline {table}{\numberline {4.1}{\ignorespaces Năm mạng Boolean mẫu được dùng để kiểm thử}}{24}{table.caption.19}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Bảng chuyển trạng thái sync cho \texttt {toy\_switch}}}{26}{table.caption.21}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Đối chiếu kết quả attractor BNAnalyzer vs PyBoolNet (FP = fixed point)}}{29}{table.caption.22}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces Thời gian sinh STG và attractor trên mạng tổng hợp (đo trên Intel i5-1135G7 @ 2.4GHz, 16GB RAM)}}{31}{table.caption.23}%
+\contentsline {table}{\numberline {1.1}{\ignorespaces Scope of implementation for the Boolean Network Analyzer project}}{4}{table.caption.8}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces Sync vs Async for the bistable toggle}}{11}{table.caption.10}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Growth of STG size with $n$}}{13}{table.caption.12}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Comparison of Boolean Network analysis tools}}{16}{table.caption.14}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Token translation table: .bnet $\to $ Python}}{21}{table.caption.16}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces The five Boolean Network samples used for evaluation}}{26}{table.caption.17}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Synchronous transition table for \texttt {toy\_switch}}}{27}{table.caption.18}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces BNAnalyzer vs PyBoolNet attractor results (FP = fixed point)}}{30}{table.caption.19}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Time to build the STG and find attractors on synthetic networks (Intel i5-1135G7 @ 2.4\,GHz, 16\,GB RAM)}}{32}{table.caption.20}%
